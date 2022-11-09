@@ -8,7 +8,9 @@ function [accT1nii, ptname, ptID, D]=LTNP_preproc_T1(dcmfolder,outfolder,outname
         ptID='unknown';
         D='unknown';
     else
-        [ptname, ptID]=LTNP_dcm2nii(dcmfolder,outfolder,outname(1:end-4)); % transform to nifti
+        % [ptname, ptID]=LTNP_dcm2nii(dcmfolder,outfolder,outname(1:end-4)); % transform to nifti with spm
+        [ptname, ptID]=LTNP_dcm2niix(dcmfolder,outfolder,outname(1:end-4)); % transform to nifti with dcm2niix
+        
 
         % Crop T1
         T1nii=fullfile(outfolder,outname);

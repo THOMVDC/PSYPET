@@ -22,14 +22,14 @@ deffolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/c
 %outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/pet_output';
 outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/MK62/output/psypet_cat12_output';
 %outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/FLUT/output/';
-outfolder_xls='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/MK62/output/psypet_cat12_stats_mci';
+outfolder_xls='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/MK62/output/psypet_cat12_stats';
 %outfolder_xls='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/FLUT/output/';
 %rr='/Volumes/LaCie/Thomas/Projects/SCRIPTS/PSYPET/templates/TemplateSO_78subj_SPM_Juli2020.nii';
 refVOI=[13,14,37,38,39,40,41,42];
 %rr='/Volumes/LaCie/Thomas/Projects/SCRIPTS/PSYPET/templates/TemplateSO_78subj_SPM_Juli2020.nii';
 
 % Loop through subjects B066,B070, B073, B077
-subjects=dir(fullfile(PETdir, 'MCI02*'));
+subjects=dir(fullfile(PETdir, 'B*'));
 %subjects={'B066','B070','B073','B077'};
 
 for s=1:length(subjects)
@@ -75,11 +75,12 @@ end
 % All excels in one for fs
 VOIdetails='/KUL_apps/freesurfer/FreeSurferColorLUT_VOIdetails_100.csv';
 VOIdet=readcell(VOIdetails);
-SUVR_table_all=fullfile(outfolder_xls,'SUVR_PVC_stats.xlsx');
+SUVR_table_all=fullfile(outfolder_xls,'SUVR_stats_L3Dv2.xlsx');
 nr_vois=length(VOIdet);
-for s=1:length(subjects)
-    subj=subjects(s).name;
-    SUVR_table_path=fullfile(outfolder,subj,['SUVR_' subj '_SUV_PET_PVC_RBV_65mm_in_seg.xlsx']);
+for s=1:length(l)
+    subj=l(s).name;
+    %SUVR_table_path=fullfile(outfolder,subj,['SUVR_' subj '_SUV_PET_PVC_RBV_65mm_in_seg.xlsx']);
+    SUVR_table_path=fullfile(outfolder,subj,['SUVR_rrrSUV_' subj '.xlsx']);
     SUVR_table=readcell(SUVR_table_path);
     if length(SUVR_table)==nr_vois+1
         SUVR_table(1,1)={subj};
@@ -92,9 +93,9 @@ end
 VOIdetails='/Users/mlaroy0/spm12/toolbox/neuromorphometrics_144.csv';
 %VOIdetails='/Users/mlaroy0/spm12/toolbox/neuromorphometrics_145.csv';
 VOIdet=readcell(VOIdetails);
-SUVR_table_all=fullfile(outfolder_xls,'SUVR_PVC_stats_145.xlsx');
+SUVR_table_all=fullfile(outfolder_xls,'SUVR_PVC_stats.xlsx');
 nr_vois=length(VOIdet);
-for s=68:length(subjects)
+for s=1:length(subjects)
     subj=subjects(s).name;
     SUVR_table_path=fullfile(outfolder,subj,'SUVR_SUV_PET_PVC_RBV_65mm_in_seg.xlsx');
     SUVR_table=readcell(SUVR_table_path);

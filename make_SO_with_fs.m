@@ -9,7 +9,7 @@ else
     manWML=WML;
 end
 
-%% 1/ Coreg T1,WM, refVOI to T1_fs
+%% 2/ Coreg T1,WM, refVOI to T1_fs
 other_images={WM;ref_VOI_pt;manWML};
 [~,rother_images]=LTNP_spm12_coregister_reslice(T1_fs,T1,other_images);
 rWM=rother_images{1};

@@ -17,6 +17,7 @@ else
     PETimg=PET;
 end
 if isfile(refVOI_thresholded)
+    [~, refVOI_name, ~]=fileparts(refVOI_thresholded);
     [refVOI_thresholded]=LCN12_read_image(refVOI_thresholded,Vref);
 end
 
@@ -37,7 +38,7 @@ SUVR             = PETimg./ref_value;
 if isfile(PET)
     [~, SUV_name, ~]=fileparts(PET);
     SUVR_name=['SUVR_' SUV_name];
-    SUVR_path = fullfile(outfolder,[SUVR_name '.nii']); 
+    SUVR_path = fullfile(outfolder,[SUVR_name '_' refVOI_name '.nii']); 
     LCN12_write_image(SUVR,SUVR_path,'SUVR',Vref.dt(1),Vref);
 else
     SUVR_path='';

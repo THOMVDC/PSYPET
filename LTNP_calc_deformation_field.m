@@ -4,9 +4,9 @@ function [def,invdef]=LTNP_calc_deformation_field(T1_path,outfolder)
 spm_dir     = which('spm');
 spm_dir     = spm_dir(1:end-6);
 spm_dir_tpm = fullfile(spm_dir,'tpm');
-cat_dir     = fullfile(spm_dir,'toolbox','cat12');
+%cat_dir     = fullfile(spm_dir,'toolbox','cat12');
 addpath(spm_dir);
-addpath(cat_dir);
+%addpath(cat_dir);
 
 % Define output paths
 [~,T1_name,T1_ext]=fileparts(T1_path);
@@ -16,6 +16,11 @@ if strcmp(T1_path,out_image)==0
 end
 def=fullfile(outfolder,['y_' T1_name '.nii']);
 invdef=fullfile(outfolder,['iy_' T1_name '.nii']);
+
+% Check voxelsize
+% if size(voxelsize)==1 % iso
+%     voxelsize=[voxelsize voxelsize voxelsize];
+% end
 
 % Initialise spm_jobman
 spm_jobman('initcfg')
@@ -28,7 +33,7 @@ matlabbatch{1}.spm.spatial.preproc.channel.write = [0 0];
 matlabbatch{1}.spm.spatial.preproc.tissue(1).tpm = cellstr(fullfile(spm_dir_tpm,'TPM.nii,1'));
 matlabbatch{1}.spm.spatial.preproc.tissue(1).ngaus = 1;
 matlabbatch{1}.spm.spatial.preproc.tissue(1).native = [1 0];
-matlabbatch{1}.spm.spatial.preproc.tissue(1).warped = [0 0];
+matlabbatch{1}.spm.spatial.preproc.tissue(1).warped = [1 0];
 matlabbatch{1}.spm.spatial.preproc.tissue(2).tpm = cellstr(fullfile(spm_dir_tpm,'TPM.nii,2'));
 matlabbatch{1}.spm.spatial.preproc.tissue(2).ngaus = 1;
 matlabbatch{1}.spm.spatial.preproc.tissue(2).native = [0 0];
@@ -56,9 +61,9 @@ matlabbatch{1}.spm.spatial.preproc.warp.affreg = 'mni';
 matlabbatch{1}.spm.spatial.preproc.warp.fwhm = 0;
 matlabbatch{1}.spm.spatial.preproc.warp.samp = 3;
 matlabbatch{1}.spm.spatial.preproc.warp.write = [1 1]; % writes def and invdef
-matlabbatch{1}.spm.spatial.preproc.warp.vox = NaN;
-matlabbatch{1}.spm.spatial.preproc.warp.bb = [NaN NaN NaN
-                                              NaN NaN NaN];
+%matlabbatch{1}.spm.spatial.preproc.warp.vox = NaN;
+%matlabbatch{1}.spm.spatial.preproc.warp.bb = [NaN NaN NaN
+%                                              NaN NaN NaN];
                                           
 % Save batch
 cd(outfolder)

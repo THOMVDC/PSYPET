@@ -294,35 +294,44 @@ writetable(SUVR_table,name_excel)
 
 %% Fastsurfer SUVR stats
 atlas_name='fastsurfer';
-VOIdetails_path='/KUL_apps/freesurfer/FreeSurferColorLUT_VOIdetails.csv'; %fullfile('/Users/mlaroy0/spm12/toolbox/cat12/templates_volumes', [atlas_name '.csv']);
+VOIdetails_path='/KUL_apps/freesurfer/FreeSurferColorLUT_VOIdetails_100.csv'; %fullfile('/Users/mlaroy0/spm12/toolbox/cat12/templates_volumes', [atlas_name '.csv']);
+%VOIdetails_path='';
 tracer='UCBJ';
-petdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET3/SUVR';
-t1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/FASTSURFER/no_biais_correction/fastsurfer_output_1_psypet1.0';
-outdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET3/stats';
+petdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/output/psypet_fs_output/';
+t1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/output/psypet_fs_output/';
+outdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/output/psypet_fs_output/';
 name_excel=fullfile(outdir,[tracer '_FS_stats.xlsx']); % give the desired name and path to the excel output
 name_overview=fullfile(outdir,[tracer '_FS_overview.xlsx']); 
 name_volumes=fullfile(outdir,[tracer '_FS_volumes.xlsx']);
 cd(petdir)
-l=dir('SUVR_FS_B*');
+l=dir(fullfile(petdir,'B*'));
 
 % Choose in which matter you look for
 for i=1:length(l)
     
+    
     % Grab subject
-    subj=l(i).name(9:12);
+    subj=l(i).name;
     disp(subj);
+    
+    % Name excel
+    name_excel=fullfile(petdir,subj,['SUVR_rrrSUV_' subj '.xlsx']);
+
 
     % Grab files
-    atlas_path=fullfile(t1dir,subj,'mri','aparc+aseg.nii'); 
+    atlas_path=fullfile(t1dir,subj,'aparc.DKTatlas+aseg.deep.withCC.nii'); 
     %SUVR_path=fullfile(petdir,['pvc_' subj '_PET_PVC_RBV_65mm_in_seg.nii']);
-    SUVR_path=fullfile(l(i).folder,l(i).name);
+    SUVR_path=fullfile(petdir,subj,['SUVR_rrrSUV_' subj '.nii']);
     
     % Calculate stats
     %[SUVR_table,~,~]=LTNP_VOI_stats_v7(atlas_path,VOIdetails_path,SUVR_path);
     [SUVR_table,~,~]=LTNP_VOI_stats_v8(SUVR_path,atlas_path,VOIdetails_path);
     
     % Write table
-    writecell(SUVR_table,name_excel,'sheet',subj)
+    writecell(SUVR_table,name_excel) %,'sheet',subj)
+    
+end
+
     
     % Add to overview
     SUVR_table(1,2)={subj};
