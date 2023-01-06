@@ -4,8 +4,8 @@ function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, r
 
 % Four scenarios:
 %    * T1 and PET are not processed yet: enter the raw dicom files for both. Choose your atlas preferences ('Freesurfer', 'Fastsurfer' or 'any CAT12 supported atlas') and psypet take cares of everything.
-%    * PET is already processed, not T1 : enter the processed nifti file for PET (psypet takes care of coregistration if not done yet) and the raw dicom files for T1. Choose your atlas preference 'Freesurfer','Fastsurfer' or 'any CAT12 supported atlas')
-%    * T1 is processed, not PET: enter the processed nifti file path into the "T1" variable + the segmentation path in patient space into the "atlas" variable + reference region in patient space into the "rr"variable. Raw dicom files for "PET" variable
+%    * PET is already processed, not T1 : enter the processed nifti file path for PET (psypet takes care of coregistration if not done yet) and the raw dicom files for T1. Choose your atlas preference 'Freesurfer','Fastsurfer' or 'any CAT12 supported atlas')
+%    * T1 is processed, not PET: enter the processed nifti file path into the "T1" variable + the segmentation path in patient space into the "atlas" variable + reference region in patient space into the "rr" variable. Raw dicom files for "PET" variable
 %    * T1 + PET are processed: see conditions of the second and third scenario's
 
 % Input arguments:
@@ -28,8 +28,20 @@ function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, r
 %   5/ atlas/segmentation :
 %               * if T1 is a nifti file, we consider "atlas" as the result of the segmentation (i.e. aparc+aseg.nii or other)
 %                * if T1 is a dcm folder, we consider "atlas" as the one to be obtained: 'Freesurfer', 'Fastsurfer' or 'any CAT12 suppported atlas'
-%   (ex: neuromorphometrics)
+%   (ex: neuromorphometrics). In case of CAT12 supported atlas, only
+%   statiscal ouput from cortical regions will be valid.
 %   6/ outfolder
+
+% Output arguments
+%     1/ SUVR_path : path to the SUVR image
+%     2/ SUVR_table_path
+%     3/ SUV_rr_table_path
+
+% General remarks
+%     1/ SUVR images are by default corrected for PVE (RBV PVC as
+%     implemented by Mertens et al. 2022)
+%     2/ Outcome imagesand statistics have the same voxel dimensions as the input T1
+
 
 %% 0/ Grab script path
 script = mfilename('fullpath');
@@ -149,10 +161,10 @@ end
 [~,SUVR_rbv_name,~]=fileparts(SUVR_rbv_path);
 
 %% 7/ Get PET and T1 statistics
-[SUVR_table]=LTNP_VOI_stats_v8(SUVR_path,segmentation,'');
-[SUV_rr_table]=LTNP_VOI_stats_v8(rSUV,refVOI,'');
-[SUVR_rbv_table]=LTNP_VOI_stats_v8(SUVR_rbv_path,segmentation,'');
-[SUV_rbv_rr_table]=LTNP_VOI_stats_v8(rbvSUV,refVOI,'');
+[SUVR_table,~,~]=LTNP_VOI_stats_v8(SUVR_path,segmentation,'');
+[SUV_rr_table,~,~]=LTNP_VOI_stats_v8(rSUV,refVOI,'');
+[SUVR_rbv_table,~,~]=LTNP_VOI_stats_v8(SUVR_rbv_path,segmentation,'');
+[SUV_rbv_rr_table,~,~]=LTNP_VOI_stats_v8(rbvSUV,refVOI,'');
 
 % Save statistics
 SUVR_table_path=fullfile(outfolder,[SUVR_name '.xlsx']);

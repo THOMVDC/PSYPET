@@ -6,27 +6,31 @@
 % processed before aparc+asegDKT, so we'll take T1.nii
 % aparc.DKTatlas+aseg.deep.withCC.mgz
 
+ect='pre';
+
 % Define input and output dir
 %PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/pet_output/';
 %PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/psypet_fs_output';
 %PETdir='/Volumes/LaCie/Margot/aline/UCBJ_psypet1';
-PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/MK62_4s';
+%PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/MK62_4s';
 %PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/UCBJ_4s';
+PETdir=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/UCBJ_4s_ECT/' ect];
 %T1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/fastsurfer_output';
 %T1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/T1/DICOM';
-T1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/input';
+%T1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/input';
+T1dir=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/T1_ECT/'  ect];
 %T1dir_atlas='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/cat12_output/';
-T1dir_atlas='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/psycat';
+%T1dir_atlas='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/psycat';
 %T1dir='/Volumes/LaCie/Margot/aline/T1_fastsurfer/fastsurfer_output';
-deffolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/cat12_output/mri';
+%deffolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/cat12_output/mri';
 %outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/pet_output';
-outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/MK62/output/psypet_cat12_output';
+outfolder=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4_ECT/imaging/'  ect];
 %outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/FLUT/output/';
-outfolder_xls='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/MK62/output/psypet_cat12_stats';
+outfolder_xls=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4_ECT/stats/'  ect];
 %outfolder_xls='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/FLUT/output/';
-%rr='/Volumes/LaCie/Thomas/Projects/SCRIPTS/PSYPET/templates/TemplateSO_78subj_SPM_Juli2020.nii';
-refVOI=[13,14,37,38,39,40,41,42];
-%rr='/Volumes/LaCie/Thomas/Projects/SCRIPTS/PSYPET/templates/TemplateSO_78subj_SPM_Juli2020.nii';
+refVOI='/Volumes/LaCie/Thomas/Projects/SCRIPTS/PSYPET/templates/TemplateSO_78subj_SPM_Juli2020.nii';
+atlas='neuromorphometrics';
+%refVOI=[13,14,37,38,39,40,41,42];
 
 % Loop through subjects B066,B070, B073, B077
 subjects=dir(fullfile(PETdir, 'B*'));
@@ -44,10 +48,10 @@ for s=1:length(subjects)
     PET=fullfile(PETdir,subj);
     %T1_mgz=fullfile(T1dir,subj,'mri','T1.mgz'); % t1 fastsurfer;
     %T1=fullfile(T1_subj(1).folder,T1_subj(1).name,['accT1_' subj '.nii']);
-    T1=fullfile(T1dir,['accT1_' subj '.nii']);
-    %T1=fullfile(T1dir,subj);
+    %T1=fullfile(T1dir,['accT1_' subj '.nii']);
+    T1=fullfile(T1dir,subj);
     %atlas_mgz=fullfile(T1dir_atlas,subj,'mri','aparc.DKTatlas+aseg.deep.withCC.mgz'); % aparc aseg fastsurfer
-    atlas=fullfile(T1dir_atlas,subj,['rbv_segm_neuromorphometrics_accT1_' subj '.nii']);
+    %atlas=fullfile(T1dir_atlas,subj,['rbv_segm_neuromorphometrics_accT1_' subj '.nii']);
     %atlas=fullfile(T1dir_atlas,subj,['rbv_segm_skull_neuromorphometrics_accT1_' subj '.nii']);
     %atlas='neuromorphometrics';
     outfolder_subj=fullfile(outfolder,subj);
@@ -60,7 +64,7 @@ for s=1:length(subjects)
     
     % Calculate voxelsize
     %voxelsize=LTNP_get_voxelsize(T1);
-    voxelsize=1;
+    %voxelsize=1;
 
     % Make rr ready
     %[~,invdef]=LTNP_calc_deformation_field(T1,outfolder_subj);
@@ -89,7 +93,7 @@ for s=1:length(l)
     writecell(SUVR_table,SUVR_table_all,'sheet',subj)
 end
 
-% All excels in one for cat12 (should work for fs too)
+% All excels in one for cat12
 VOIdetails='/Users/mlaroy0/spm12/toolbox/neuromorphometrics_144.csv';
 %VOIdetails='/Users/mlaroy0/spm12/toolbox/neuromorphometrics_145.csv';
 VOIdet=readcell(VOIdetails);
@@ -97,7 +101,7 @@ SUVR_table_all=fullfile(outfolder_xls,'SUVR_PVC_stats.xlsx');
 nr_vois=length(VOIdet);
 for s=1:length(subjects)
     subj=subjects(s).name;
-    SUVR_table_path=fullfile(outfolder,subj,'SUVR_SUV_PET_PVC_RBV_65mm_in_seg.xlsx');
+    SUVR_table_path=fullfile(outfolder,subj,'SUVR_SUV_PET_PVC_RBV_65mm_in_seg_wTemplateSO_78subj_SPM_Juli2020.xlsx');
     SUVR_table=readcell(SUVR_table_path);
     SUVR_table_update=cell(nr_vois+1,size(SUVR_table,2));
     SUVR_table(1,1)={subj};

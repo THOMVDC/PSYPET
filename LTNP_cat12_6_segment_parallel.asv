@@ -3,22 +3,21 @@ function LTNP_cat12_6_segment_parallel(T1, output_folder, voxelsize, wmhc, atlas
 %% Background
 % 
 % Segmentats multiple T1s with CAT12, results can be found in the same folder
-% as the respective T1 images
+% as the respective T1 image
+%
 %
 % Input:
-%       T1 = cell(n,) with the n absolute paths to anatomical T1 images in nifti
-%       output_folder = string, absolute path to the output_folder of choice
+%       T1 = absolute path, to anatomical T1 image in nifti
+%       output_folder= absolute path, to the output_folder of choice
 %       wmhc = numeric, should be equal to 1 (wmh map output) or to 0 (no wmh map output)
 %              ! the cat.extopts.WMHC should be set to 2 (considers WMH and corrects segmentation to WM)
-%       voxelsize = numeric, voxelsize of the space you want the normalised output to be in
+%       voxelsize = voxelsize of the space you want the normalised output to be in
 %
 % Optional input:
 %       atlas= string, should be [] | 'cobra' | 'hammers' | 'neuromorphometrics' | 'lbpa40' |
 %       '/path/to/own_atlas'
-%
 % Author: 
 %       Thomas Vande Casteele, KU Leuven
-%
 % Dependency:
 %       CAT12, Friedrich  Schiller University  Jena,  Jena,  Germany
 

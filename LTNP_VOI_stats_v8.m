@@ -3,14 +3,16 @@ function [table_out,colormap,Vref]=LTNP_VOI_stats_v8(img_path,atlas_path,VOIdeta
 %%%%%%%%%%%%%%%%
 % Written by Thomas Vande Casteele, KU Leuven
 
-% img_path and atlas_path should be registred in the same space
-% if use of a mask_path, he should be registred in the same space as
-% atlas_path or img_path
-% if use of a VOIdetails, should be a csv or excel file, with 3 columns:
-%       column 1 = ROIid (can be more than one, ex: [3 4 7 8] for a composite VOI)
-%       column 2 = any kind
-%       column 3 = ROIname
-% If VOIdetails is empty (''), than the atlas values are used as ROInames
+% Input
+%   img_path and atlas_path should be registred in the same space
+%   VOIdetails should be either 
+%       empty string (''), in which case the atlas values are used as ROInames 
+%       or a csv/excel file, with 3 columns:
+%           column 1 = ROIid (can be more than one, ex: [3 4 7 8] for a composite VOI)
+%           column 2 = any kind
+%           column 3 = ROIname
+%   mask_path is an optional argument, he should be registred in the same space as
+%       atlas_path and img_path
 
 %% Processing %%
 %%%%%%%%%%%%%%%%

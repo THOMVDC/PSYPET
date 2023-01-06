@@ -1,15 +1,21 @@
 function [out_image_warped]=LTNP_cat12_warp(image,deformation_field,outfolder)
 
+%% Background
 
+% Warps an image with a deformation field by 4th degree B-spline interpolation 
+%
 % Input:
-%       Absolute path to image to be warped
-%       Absolute path to the deformation field that SPM12 will use
-%       
+%       image = string, absolute path to image to be warped
+%       deformation_field = string, absolute path to the deformation field
+%
 % Output:
-%       SPM warped image by the deformation field
+%       out_image_warped = string, absolute path to the CAT12 warped image by the deformation field
 %
 % Author: 
-%       Thomas Vande Casteele
+%       Thomas Vande Casteele, KU Leuven
+%       Dependency: CAT12, Friedrich  Schiller University  Jena,  Jena,  Germany
+
+%% Processing
 
 % Defining paths
 spm_dir     = which('spm');

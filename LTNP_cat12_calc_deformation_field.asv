@@ -2,25 +2,21 @@ function [def,invdef]=LTNP_cat12_calc_deformation_field(T1_path,outfolder,voxels
 
 %% Background
 
-% Calculates the deformation and inverse deformation field of the warping of
+% Calculate the deformation and inverse deformation field of the warping of
 % a T1 towards MNI 
 %
-% Input:
-%       T1_path = string, absolute path to the T1 you want to calculate the deformation field to mni from
-%       outfolder = string, absolute path to the folder you want the output to be stored
-% 
-% Optional input:
-%       voxelsize = numeric, isotropic voxelsize of the MNI space you want to warp to calculate the deformation field
+% Input arguments
+%     T1_path = path, to the T1 you want to calculate the deformation field to mni from
+%     outfolder = path, to the folder you want the output to be stored
+% Optional input arguments
+%     voxelsize = numeric,isotropic voxelsize of the MNI space you want to warp to calculate the deformation field
 %
-% Output:
-%       def = string, absolute path to the deformation field
-%       invdef = string, absolute path to the inverse deformation field
+% Output arguments
+%   def = path, to the deformation field (from T1 to
+%   invdef
 %
-% Author:
-%       Thomas Vande Casteele, KU Leuven
-% 
-% Dependency:
-%       CAT12, Friedrich  Schiller University  Jena,  Jena,  Germany
+% Author: Thomas Vande Casteele, KU Leuven
+% Dependency: CAT12, Friedrich  Schiller University  Jena,  Jena,  Germany
 
 %% Processing
 % Defining input paths

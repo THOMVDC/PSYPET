@@ -21,6 +21,9 @@ function [ptname,ptID,bodyweight, injdosis, acqtime, injtime, halftime, filelist
     
     if isfield(info,'PatientWeight')
         bodyweight = 1000*info.PatientWeight; % in g
+        if bodyweight <= 0 || bodyweight > 300000
+            error('PatientWeight specified in dcm not plausible')
+        end
     else
         error('no PatientWeight specified in dcm')
     end

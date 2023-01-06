@@ -1,5 +1,25 @@
 function [def,invdef]=LTNP_spm12_calc_deformation_field(T1_path,outfolder)
 
+%% Background
+%
+% Calculate the deformation and inverse deformation field of the warping of
+% a T1 towards MNI 
+%
+% Input:
+%       T1_path = string, absolute path to the T1 you want to calculate the deformation field to mni from
+%       outfolder = string, absolute path to the folder you want the output to be stored
+%
+% Output:
+%       def = string, absolute path to the deformation field
+%       invdef = string, absolute path to the inverse deformation field
+%
+% Author:
+%       Thomas Vande Casteele, KU Leuven
+% 
+% Dependency:
+%       SPM12, Wellcome Trust Centre for Neuroimaging, University College London
+
+%% Processing
 % Defining input paths
 spm_dir     = which('spm');
 spm_dir     = spm_dir(1:end-6);
@@ -16,11 +36,6 @@ if strcmp(T1_path,out_image)==0
 end
 def=fullfile(outfolder,['y_' T1_name '.nii']);
 invdef=fullfile(outfolder,['iy_' T1_name '.nii']);
-
-% Check voxelsize
-% if size(voxelsize)==1 % iso
-%     voxelsize=[voxelsize voxelsize voxelsize];
-% end
 
 % Initialise spm_jobman
 spm_jobman('initcfg')
@@ -61,9 +76,6 @@ matlabbatch{1}.spm.spatial.preproc.warp.affreg = 'mni';
 matlabbatch{1}.spm.spatial.preproc.warp.fwhm = 0;
 matlabbatch{1}.spm.spatial.preproc.warp.samp = 3;
 matlabbatch{1}.spm.spatial.preproc.warp.write = [1 1]; % writes def and invdef
-%matlabbatch{1}.spm.spatial.preproc.warp.vox = NaN;
-%matlabbatch{1}.spm.spatial.preproc.warp.bb = [NaN NaN NaN
-%                                              NaN NaN NaN];
                                           
 % Save batch
 cd(outfolder)

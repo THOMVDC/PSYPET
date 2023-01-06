@@ -1,16 +1,22 @@
 function [out_image_warped]=LTNP_spm12_warp(image,deformation_field,outfolder,voxelsize)
 
+%% Background
 
+% Warps an image with a deformation field by 4th degree B-spline interpolation 
+%
 % Input:
-%       Absolute path to image to be warped
-%       Absolute path to the deformation field that SPM12 will use
-%       
+%       image = string, absolute path to image to be warped
+%       deformation_field = string, absolute path to the deformation field
+%       voxelsize = numeric, voxelsize of the written warped ROI
+%
 % Output:
-%       SPM warped image by the deformation field
+%       out_image_warped = string, absolute path to the SPM warped image by the deformation field
 %
 % Author: 
-%       Thomas Vande Casteele
+%       Thomas Vande Casteele, KU Leuven
+%       Dependency: SPM12, Wellcome Trust Centre for Neuroimaging, University College London
 
+%% Processing
 % Defining paths
 spm_dir     = which('spm');
 spm_dir     = spm_dir(1:end-6);

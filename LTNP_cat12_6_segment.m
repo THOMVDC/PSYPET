@@ -1,20 +1,33 @@
-function [TIV,deformation_field, invdeformation_field]=LTNP_cat12_6_segment(T1, output_folder, wmhc, atlas, voxelsize)
+function [TIV,deformation_field, invdeformation_field]=LTNP_cat12_6_segment(T1, output_folder, voxelsize, wmhc, atlas)
 
+%% Background
+% 
+% Segmentents a specified T1 with CAT12, results can be found in the same folder
+% as the T1 image
+%
 % Input:
-%       T1= Absolute path to anatomical T1 image in nifti
-%       output_folder= Absolute path to the output_folder of choice
-%       atlas= [] | 'cobra' | 'hammers' | 'neuromorphometrics' | 'lbpa40' |
+%       T1 = string, absolute path to anatomical T1 images in nifti
+%       output_folder= string, absolute path, to the output_folder of choice
+%       wmhc = numeric, should be equal to 1 (wmh map output) or to 0 (no wmh map output)
+%              ! the cat.extopts.WMHC should be set to 2 (considers WMH and corrects segmentation to WM)
+%       voxelsize = numeric, voxelsize of the space you want the normalised output to be in
+%
+% Optional input:
+%       atlas= string, should be [] | 'cobra' | 'hammers' | 'neuromorphometrics' | 'lbpa40' |
 %       '/path/to/own_atlas'
-%       wmhc should be equal to 1 (wmh map output) or to 0 (no wmh map output)
-%       the cat.extopts.WMHC should be set to 2 (considers WMH and corrects segmentation to WM)
-%       voxelsize of space you want to warp to
-%       
+%
 % Output:
-%       Segmentation done by CAT12, results can be found in the same folder
-%       as the T1 image
+%       TIV = numeric, estimated TIV provided by CAT12
+%       def = string, absolute path to the deformation field
+%       invdef = string, absolute path to the inverse deformation field
 %
 % Author: 
-%       Thomas Vande Casteele
+%       Thomas Vande Casteele, KU Leuven
+%
+% Dependency:
+%       CAT12, Friedrich  Schiller University  Jena,  Jena,  Germany
+
+%% Processing
 
 % Defining paths
 spm_dir     = which('spm');
@@ -32,7 +45,7 @@ if strcmp(T1,T1_copy)==0
 end
 
 % Check if and which atlas is specified
-if nargin > 3 % then atlas is specified
+if nargin > 4 % then atlas is specified
     neuromorphometrics=0;
     lpba40=0;
     cobra=0;

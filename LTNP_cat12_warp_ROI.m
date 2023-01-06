@@ -1,16 +1,21 @@
-function [out_image_warped]=LTNP_cat12_warp_ROI(image,deformation_field,outfolder)
+function [out_ROI_warped]=LTNP_cat12_warp_ROI(ROI,deformation_field,outfolder)
 
+%% Background
 
+% Warps a ROI with a deformation field by nearest neighbour interpolation 
+%
 % Input:
-%       Absolute path to image to be warped
-%       Absolute path to the deformation field that SPM12 will use
-%       
+%       ROI = string, absolute path to image to be warped
+%       deformation_field = string, absolute path to the deformation field
+%
 % Output:
-%       SPM warped image by the deformation field
+%       out_ROI_warped = string, absolute path to the CAT12 warped image by the deformation field
 %
 % Author: 
-%       Thomas Vande Casteele
+%       Thomas Vande Casteele, KU Leuven
+%       Dependency: CAT12, Friedrich  Schiller University  Jena,  Jena,  Germany
 
+%% Processing
 % Defining paths
 spm_dir     = which('spm');
 spm_dir     = spm_dir(1:end-6);
@@ -19,10 +24,10 @@ addpath(spm_dir);
 addpath(cat_dir);
 
 % Grab image name, copy it
-[~,input_image_name,input_image_ext]=fileparts(image);
+[~,input_image_name,input_image_ext]=fileparts(ROI);
 out_image=fullfile(outfolder,[input_image_name input_image_ext]);
-if strcmp(image,out_image)==0
-    copyfile(image,outfolder) 
+if strcmp(ROI,out_image)==0
+    copyfile(ROI,outfolder) 
 end
 
 % Initialise spm_jobman
@@ -43,6 +48,6 @@ save batch_warping_PET matlabbatch
 spm_jobman('run',matlabbatch)
 
 % Return path of warped image
-out_image_warped=fullfile(outfolder,['w' input_image_name input_image_ext]);
+out_ROI_warped=fullfile(outfolder,['w' input_image_name input_image_ext]);
 
 end

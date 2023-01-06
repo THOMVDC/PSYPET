@@ -1,29 +1,22 @@
-function [def,invdef]=LTNP_cat12_calc_deformation_field(T1_path,outfolder,voxelsize)
+function [TIV,deformation_field, invdeformation_field]=LTNP_cat12_6_segment(T1, output_folder, wmhc, atlas, voxelsize)
 
-%% Background
-
-% Calculates the deformation and inverse deformation field of the warping of
-% a T1 towards MNI 
-%
 % Input:
-%       T1_path = string, absolute path to the T1 you want to calculate the deformation field to mni from
-%       outfolder = string, absolute path to the folder you want the output to be stored
-% 
-% Optional input:
-%       voxelsize = numeric, isotropic voxelsize of the MNI space you want to warp to calculate the deformation field
-%
+%       T1= Absolute path to anatomical T1 image in nifti
+%       output_folder= Absolute path to the output_folder of choice
+%       atlas= [] | 'cobra' | 'hammers' | 'neuromorphometrics' | 'lbpa40' |
+%       '/path/to/own_atlas'
+%       wmhc should be equal to 1 (wmh map output) or to 0 (no wmh map output)
+%       the cat.extopts.WMHC should be set to 2 (considers WMH and corrects segmentation to WM)
+%       voxelsize of space you want to warp to
+%       
 % Output:
-%       def = string, absolute path to the deformation field
-%       invdef = string, absolute path to the inverse deformation field
+%       Segmentation done by CAT12, results can be found in the same folder
+%       as the T1 image
 %
-% Author:
-%       Thomas Vande Casteele, KU Leuven
-% 
-% Dependency:
-%       CAT12, Friedrich  Schiller University  Jena,  Jena,  Germany
+% Author: 
+%       Thomas Vande Casteele
 
-%% Processing
-% Defining input paths
+% Defining paths
 spm_dir     = which('spm');
 spm_dir     = spm_dir(1:end-6);
 spm_dir_tpm = fullfile(spm_dir,'tpm');
@@ -31,25 +24,73 @@ cat_dir     = fullfile(spm_dir,'toolbox','cat12');
 addpath(spm_dir);
 addpath(cat_dir);
 
-% Define output paths
-[~,T1_name,T1_ext]=fileparts(T1_path);
-out_image=fullfile(outfolder,[T1_name T1_ext]);
-if strcmp(T1_path,out_image)==0
-    copyfile(T1_path,outfolder) 
+% Making output folder with a copy of T1
+[~,image_name,image_ext] = fileparts(T1);
+T1_copy=fullfile(output_folder,[image_name image_ext]);
+if strcmp(T1,T1_copy)==0
+    copyfile(T1,output_folder)
 end
-def=fullfile(outfolder,['y_' T1_name '.nii']);
-invdef=fullfile(outfolder,['iy_' T1_name '.nii']);
 
-% Voxelsize
-if nargin<3
-    voxelsize=1.5;
+% Check if and which atlas is specified
+if nargin > 3 % then atlas is specified
+    neuromorphometrics=0;
+    lpba40=0;
+    cobra=0;
+    hammers=0;
+    isbr=0;
+    aal=0;
+    mori=0;
+    anatomy=0;
+    if strcmp(atlas,'neuromorphometrics')
+        neuromorphometrics=1;
+    elseif strcmp(atlas,'lpba40')
+        lpba40=1;
+    elseif strcmp(atlas,'cobra')
+        cobra=1;
+    elseif strcmp(atlas,'isbr')
+        isbr=1;
+    elseif strcmp(atlas,'aal3')
+        aal=1;
+    elseif strcmp(atlas,'mori')
+        mori=1;
+    elseif strcmp(atlas,'anatomy3')
+        anatomy=1;
+    end
+else % no atlas specified, set a default mode
+    neuromorphometrics=1;
+    lpba40=0;
+    cobra=1;
+    hammers=1;
+    isbr=0;
+    aal=0;
+    mori=0;
+    anatomy=0;
 end
+
+% Set parameters for white matter hyperintensities map output
+if wmhc==0
+    WMHC_seg=1;
+    WMH_native = 0;
+    WMH_warped = 0;
+    WMH_mod = 0;
+	WMH_dartel = 0;
+elseif wmhc==1
+    WMHC_seg=3;
+	WMH_native = 1;
+    WMH_warped = 1;
+    WMH_mod = 1;
+	WMH_dartel = 1;
+end
+
+
 
 % Initialise spm_jobman
 spm_jobman('initcfg')
 
-% Write job
-matlabbatch{1}.spm.tools.cat.estwrite.data = cellstr([out_image ',1']);
+% Write batchfile CAT12.7
+%matlabbatch{1}.spm.tools.cat.estwrite.extopts.expertgui = 2; % force
+%expert mode
+matlabbatch{1}.spm.tools.cat.estwrite.data = cellstr([T1_copy ',1']);
 %matlabbatch{1}.spm.tools.cat.estwrite.data_wmh = {''};
 matlabbatch{1}.spm.tools.cat.estwrite.nproc = 0; % if you want parallelization, set this to the number of cpu's you want to dedicate
 matlabbatch{1}.spm.tools.cat.estwrite.opts.tpm = cellstr(fullfile(spm_dir_tpm,'TPM.nii'));
@@ -68,7 +109,7 @@ matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.LASstr = 0.5;
 matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.gcutstr = 2;
 matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.cleanupstr = 0.5;
 %matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.BVCstr = 0.5;
-matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.WMHC = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.WMHC = WMHC_seg;
 matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.SLC = 0;
 %matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.mrf = 1;
 matlabbatch{1}.spm.tools.cat.estwrite.extopts.segmentation.restypes.fixed = [1 0.1];
@@ -91,33 +132,33 @@ matlabbatch{1}.spm.tools.cat.estwrite.extopts.admin.ignoreErrors = 0;
 matlabbatch{1}.spm.tools.cat.estwrite.extopts.admin.verb = 2;
 matlabbatch{1}.spm.tools.cat.estwrite.extopts.admin.print = 2;
 matlabbatch{1}.spm.tools.cat.estwrite.output.surface = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.neuromorphometrics = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.lpba40 = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.cobra = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.hammers = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.ibsr = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.aal = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.mori = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.anatomy = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.neuromorphometrics = neuromorphometrics;
+matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.lpba40 = lpba40;
+matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.cobra = cobra;
+matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.hammers = hammers;
+matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.ibsr = isbr;
+matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.aal = aal;
+matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.mori = mori;
+matlabbatch{1}.spm.tools.cat.estwrite.output.ROImenu.atlases.anatomy = anatomy;
 matlabbatch{1}.spm.tools.cat.estwrite.output.GM.native = 1;
 matlabbatch{1}.spm.tools.cat.estwrite.output.GM.warped = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.GM.mod = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.GM.mod = 1;
 matlabbatch{1}.spm.tools.cat.estwrite.output.GM.dartel = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.WM.native = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.WM.native = 1;
 matlabbatch{1}.spm.tools.cat.estwrite.output.WM.warped = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.WM.mod = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.WM.mod = 1;
 matlabbatch{1}.spm.tools.cat.estwrite.output.WM.dartel = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.CSF.native = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.CSF.native = 1;
 matlabbatch{1}.spm.tools.cat.estwrite.output.CSF.warped = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.CSF.mod = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.CSF.mod = 1;
 matlabbatch{1}.spm.tools.cat.estwrite.output.CSF.dartel = 0;
 %matlabbatch{1}.spm.tools.cat.estwrite.output.ct.native = 0;
 %matlabbatch{1}.spm.tools.cat.estwrite.output.ct.warped = 0;
 %matlabbatch{1}.spm.tools.cat.estwrite.output.ct.dartel = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.WMH.native = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.WMH.warped = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.WMH.mod = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.WMH.dartel = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.WMH.native = WMH_native;
+matlabbatch{1}.spm.tools.cat.estwrite.output.WMH.warped = WMH_warped;
+matlabbatch{1}.spm.tools.cat.estwrite.output.WMH.mod = WMH_mod;
+matlabbatch{1}.spm.tools.cat.estwrite.output.WMH.dartel = WMH_dartel;
 matlabbatch{1}.spm.tools.cat.estwrite.output.SL.native = 0;
 matlabbatch{1}.spm.tools.cat.estwrite.output.SL.warped = 0;
 matlabbatch{1}.spm.tools.cat.estwrite.output.SL.mod = 0;
@@ -126,26 +167,40 @@ matlabbatch{1}.spm.tools.cat.estwrite.output.SL.dartel = 0;
 %matlabbatch{1}.spm.tools.cat.estwrite.output.TPMC.warped = 1;
 %matlabbatch{1}.spm.tools.cat.estwrite.output.TPMC.mod = 1;
 %matlabbatch{1}.spm.tools.cat.estwrite.output.TPMC.dartel = 2;
-matlabbatch{1}.spm.tools.cat.estwrite.output.atlas.native = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.atlas.native = 1;
 %matlabbatch{1}.spm.tools.cat.estwrite.output.atlas.warped = 1;
-matlabbatch{1}.spm.tools.cat.estwrite.output.atlas.dartel = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.label.native = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.label.warped = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.label.dartel = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.bias.native = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.bias.warped = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.bias.dartel = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.las.native = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.las.warped = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.las.dartel = 0;
-matlabbatch{1}.spm.tools.cat.estwrite.output.jacobianwarped = 0;
+matlabbatch{1}.spm.tools.cat.estwrite.output.atlas.dartel = 2;
+matlabbatch{1}.spm.tools.cat.estwrite.output.label.native = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.label.warped = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.label.dartel = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.bias.native = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.bias.warped = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.bias.dartel = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.las.native = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.las.warped = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.las.dartel = 1;
+matlabbatch{1}.spm.tools.cat.estwrite.output.jacobianwarped = 1;
 matlabbatch{1}.spm.tools.cat.estwrite.output.warps = [1 1];
-                                          
-% Save batch
-cd(outfolder)
-save batch_coregister matlabbatch
+
+
+% Save batchfile
+cd(output_folder)
+save batch_segment matlabbatch
 
 % Run batchfile
 spm_jobman('run',matlabbatch)
-                                          
+
+% Load CAT12 measures
+CAT12_vol_thick=load(fullfile(output_folder,'report',['cat_' image_name '.mat']));
+
+% Catch TIV
+%str=CAT12_vol_thick.S.catlog{end-4, 1};
+%IQR=extractBetween(str,'(IQR):  ','%');
+%thickness=cell2mat(CAT12_vol_thick.S.subjectmeasures.dist_thickness);
+TIV=CAT12_vol_thick.S.subjectmeasures.vol_TIV;
+
+% Grab path of deformation fields
+deformation_field = fullfile(output_folder,'mri',['y_' image_name image_ext]);
+invdeformation_field = fullfile(output_folder,'mri',['iy_' image_name image_ext]);
+
 end
