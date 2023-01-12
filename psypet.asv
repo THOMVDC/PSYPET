@@ -1,4 +1,4 @@
-function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, rr, atlas, outfolder)
+function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, rr, atlas, outfolder, pvc)
 
 %% Script written by Thomas Vande Casteele
 
@@ -38,7 +38,10 @@ function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, r
 %     3/ SUV_rr_table_path
 
 % General remarks
-%     1/ SUVR images are by default corrected for 
+%     1/ SUVR images are by default corrected for PVE (RBV PVC as
+%     implemented by Mertens et al. 2022)
+%     2/ Outcome imagesand statistics have the same voxel dimensions as the input T1
+
 
 %% 0/ Grab script path
 script = mfilename('fullpath');
@@ -116,9 +119,18 @@ end
 %% 3/ Coregister processed PET to processed T1
 [rSUV,~]=LTNP_spm12_coregister_reslice(T1_path,SUV_path,outfolder);
 
-%% 4/ Apply RBV PVC on coregistred processed PET
-[rbvSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
-%LTNP_PVC_MG()
+%% 4/ Apply PVC on coregistred processed PET if required
+if nargin==6
+    pvc='none';
+end
+if isequal(pvc,'RBV')
+    [pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
+elseif isequal(pvc,'MG')
+    [pvcSUV]=LTNP_PVC_MG();
+    %[pvc_MGorig_path,pvc_MGmodif_path,mean_WM_value] = LTNP_PVC_MG(PET_path,GM_path,WM_path,FWHM,out_folder,WM_VOI)
+else
+    pvcSUV=rSUV;
+end
 
 %% 5/ Make refVOI
 if RR_ready
@@ -154,14 +166,14 @@ end
 %% 6/ Make SUVR image
 [~,~,~,SUVR_path]=LTNP_calculate_SUVR(rSUV,refVOI,outfolder); % before rbv
 [~,SUVR_name,~]=fileparts(SUVR_path);
-[~,~,~,SUVR_rbv_path]=LTNP_calculate_SUVR(rbvSUV,refVOI,outfolder); % after rbv
-[~,SUVR_rbv_name,~]=fileparts(SUVR_rbv_path);
+[~,~,~,SUVR_pvc_path]=LTNP_calculate_SUVR(pvcSUV,refVOI,outfolder); % after rbv
+[~,SUVR_pvc_name,~]=fileparts(SUVR_pvc_path);
 
 %% 7/ Get PET and T1 statistics
 [SUVR_table,~,~]=LTNP_VOI_stats_v8(SUVR_path,segmentation,'');
 [SUV_rr_table,~,~]=LTNP_VOI_stats_v8(rSUV,refVOI,'');
-[SUVR_rbv_table,~,~]=LTNP_VOI_stats_v8(SUVR_rbv_path,segmentation,'');
-[SUV_rbv_rr_table,~,~]=LTNP_VOI_stats_v8(rbvSUV,refVOI,'');
+[SUVR_rbv_table,~,~]=LTNP_VOI_stats_v8(SUVR_pvc_path,segmentation,'');
+[SUV_rbv_rr_table,~,~]=LTNP_VOI_stats_v8(pvcSUV,refVOI,'');
 
 % Save statistics
 SUVR_table_path=fullfile(outfolder,[SUVR_name '.xlsx']);

@@ -1,4 +1,4 @@
-function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, rr, atlas, outfolder)
+function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, rr, atlas, outfolder, pvc)
 
 %% Script written by Thomas Vande Casteele
 
@@ -116,12 +116,32 @@ end
 % Grab voxelsize
 %voxelsize=LTNP_get_voxelsize(T1_path);
 
-%% 3/ Coregister processed PET to processed T1
-[rSUV,~]=LTNP_spm12_coregister_reslice(T1_path,SUV_path,outfolder);
+%% 3/ Coregister processed PET to processed T1 if not done yet
+% Check if both images have same voxelsize and dimension, if they do we
+% consider them as already coregistred
+[vs1,dim1]=LTNP_get_voxelsize_and_dimension(T1_path);
+[vs2,dim2]=LTNP_get_voxelsize_and_dimension(SUV_path);
+if ~isequal(vs1,vs2) || ~isequal (dim1,dim2)
+    [rSUV,~]=LTNP_spm12_coregister_reslice(T1_path,SUV_path,outfolder);
+else
+    rSUV=SUV_path;
+end
 
-%% 4/ Apply RBV PVC on coregistred processed PET
-[rbvSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
-%LTNP_PVC_MG()
+%% 4/ Apply PVC on coregistred processed PET if required
+if nargin==6
+    pvc='none';
+end
+if isequal(pvc,'RBV')
+    [pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
+elseif isequal(pvc,'MG_orig')
+    [pvcSUV,~,~] = LTNP_PVC_MG(rSUV,GMpath,WMpath,FWHM,outfolder,WM_VOI);
+elseif isequal(pvc,'MG_modif')
+    [~,pvcSUV,~] = LTNP_PVC_MG(rSUV,GMpath,WMpath,FWHM,outfolder,WM_VOI);
+elseif isequal(pvc,'none') % change name of non corrected rSUV for further processing, keep original rSUV file
+    [folder,name,ext]=fileparts(rSUV);
+    pvcSUV=fullfile(folder,[name '_no_pvc' ext]);
+    copyfile(rSUV,pvcSUV);
+end
 
 %% 5/ Make refVOI
 if RR_ready
@@ -157,25 +177,25 @@ end
 %% 6/ Make SUVR image
 [~,~,~,SUVR_path]=LTNP_calculate_SUVR(rSUV,refVOI,outfolder); % before rbv
 [~,SUVR_name,~]=fileparts(SUVR_path);
-[~,~,~,SUVR_rbv_path]=LTNP_calculate_SUVR(rbvSUV,refVOI,outfolder); % after rbv
-[~,SUVR_rbv_name,~]=fileparts(SUVR_rbv_path);
+[~,~,~,SUVR_pvc_path]=LTNP_calculate_SUVR(pvcSUV,refVOI,outfolder); % after rbv
+[~,SUVR_pvc_name,~]=fileparts(SUVR_pvc_path);
 
 %% 7/ Get PET and T1 statistics
 [SUVR_table,~,~]=LTNP_VOI_stats_v8(SUVR_path,segmentation,'');
 [SUV_rr_table,~,~]=LTNP_VOI_stats_v8(rSUV,refVOI,'');
-[SUVR_rbv_table,~,~]=LTNP_VOI_stats_v8(SUVR_rbv_path,segmentation,'');
-[SUV_rbv_rr_table,~,~]=LTNP_VOI_stats_v8(rbvSUV,refVOI,'');
+[SUVR_pvc_table,~,~]=LTNP_VOI_stats_v8(SUVR_pvc_path,segmentation,'');
+[SUV_pvc_rr_table,~,~]=LTNP_VOI_stats_v8(pvcSUV,refVOI,'');
 
 % Save statistics
 SUVR_table_path=fullfile(outfolder,[SUVR_name '.xlsx']);
 SUV_rr_table_path=fullfile(outfolder,[refVOI_name '.xlsx']);
-SUVR_rbv_table_path=fullfile(outfolder,[SUVR_rbv_name '.xlsx']);
-SUV_rbv_rr_table_path=fullfile(outfolder,['PVC_' refVOI_name '.xlsx']);
+SUVR_pvc_table_path=fullfile(outfolder,[SUVR_pvc_name '.xlsx']);
+SUV_pvc_rr_table_path=fullfile(outfolder,['PVC_' refVOI_name '.xlsx']);
 
 writecell(SUVR_table,SUVR_table_path,'sheet',subj)
 writecell(SUV_rr_table,SUV_rr_table_path,'sheet',subj)
-writecell(SUVR_rbv_table,SUVR_rbv_table_path,'sheet',subj)
-writecell(SUV_rbv_rr_table,SUV_rbv_rr_table_path,'sheet',subj)
+writecell(SUVR_pvc_table,SUVR_pvc_table_path,'sheet',subj)
+writecell(SUV_pvc_rr_table,SUV_pvc_rr_table_path,'sheet',subj)
 
 end
 

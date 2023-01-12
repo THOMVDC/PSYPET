@@ -17,11 +17,6 @@ end
 def=fullfile(outfolder,['y_' T1_name '.nii']);
 invdef=fullfile(outfolder,['iy_' T1_name '.nii']);
 
-% Check voxelsize
-% if size(voxelsize)==1 % iso
-%     voxelsize=[voxelsize voxelsize voxelsize];
-% end
-
 % Initialise spm_jobman
 spm_jobman('initcfg')
 
@@ -61,9 +56,6 @@ matlabbatch{1}.spm.spatial.preproc.warp.affreg = 'mni';
 matlabbatch{1}.spm.spatial.preproc.warp.fwhm = 0;
 matlabbatch{1}.spm.spatial.preproc.warp.samp = 3;
 matlabbatch{1}.spm.spatial.preproc.warp.write = [1 1]; % writes def and invdef
-%matlabbatch{1}.spm.spatial.preproc.warp.vox = NaN;
-%matlabbatch{1}.spm.spatial.preproc.warp.bb = [NaN NaN NaN
-%                                              NaN NaN NaN];
                                           
 % Save batch
 cd(outfolder)
