@@ -1,4 +1,4 @@
-function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, rr, atlas, outfolder, pvc)
+function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, rr, atlas, outfolder,pvc)
 
 %% Script written by Thomas Vande Casteele
 
@@ -31,7 +31,11 @@ function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, r
 %   (ex: neuromorphometrics). In case of CAT12 supported atlas, only
 %   statiscal ouput from cortical regions will be valid.
 %   6/ outfolder
-
+%
+% Optional input arguments (under construction)
+%   1/ pvc = string, either 'MG_orig', 'MG_modif' (muller gartner model) or 'RBV' (region
+%   based voxelwise)
+%
 % Output arguments
 %     1/ SUVR_path : path to the SUVR image
 %     2/ SUVR_table_path
@@ -42,16 +46,30 @@ function [SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, r
 %     implemented by Mertens et al. 2022)
 %     2/ Outcome imagesand statistics have the same voxel dimensions as the input T1
 
+%% 0/ Grab script path, make logfile
 
-%% 0/ Grab script path
+% Grab script path
 script = mfilename('fullpath');
 [script_dir,~,~]=fileparts(script);
 
+% Make logfile
+name_logfile = fullfile(outfolder,'psypet_log.txt');
+fid  = fopen(name_logfile,'a+');
+
+% Talk to logfile
+fprintf(fid,'psypet.m \n');
+fprintf(fid,'working on subject %s \n',subj);
+
 %% 1/ Process PET if not done yet
 if endsWith(PET,'.nii')
+    
+    % Talk to logfile
+    fprintf(fid,'assuming PET has already been converted to nifti, aligned, averaged and centered \n');
     SUV_path=PET;
 else
-    
+    % Talk to logfile
+    fprintf(fid,'PET preprocessing started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
+        
     % Make a subfolder
     cd(outfolder)
     mkdir('PETpreproc')
@@ -69,14 +87,28 @@ else
     % Center image
     LTNP_center(SUV_path)
     
+    % No cropping
+    
 end
 
 %% 2/ Process T1 if not done yet
 if endsWith(T1,'.nii')
+    
+    % Talk to logfile
+    fprintf(fid,'assuming T1 has already been converted to nifti and centered on the AC \n');
+    fprintf(fid,'assuming T1 has already been segmented \n');
+    
+    % Set gates
     RR_ready=true;
     T1_path=T1;
     segmentation=atlas;
+    
 else
+    
+    % Talk to logfile
+    fprintf(fid,'T1 preprocessing started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
+    
+    % Set gates
     RR_ready=false;
     
     % Make a subfolder
@@ -87,7 +119,7 @@ else
     % Give a name to the (to be) processed image
     T1name=['T1_' subj '.nii'];
     
-    % dcm2nii, crop, center
+    % Convert to nifti, center
     [accT1nii, ~, ~]=LTNP_preproc_T1_spm(T1,outfolder_t1,T1name); 
     
     % delete qform
@@ -114,30 +146,73 @@ else
 end
 
 % Grab voxelsize
-%voxelsize=LTNP_get_voxelsize(T1_path);
+%[voxelsize,dimension]=LTNP_get_voxelsize_and_dimension(T1_path);
 
 %% 3/ Coregister processed PET to processed T1 if not done yet
-% Check if both images have same voxelsize and dimension, if they do we
-% consider them as already coregistred
+
+% Grab voxelsize and dimensions of T1 and PET
 [vs1,dim1]=LTNP_get_voxelsize_and_dimension(T1_path);
 [vs2,dim2]=LTNP_get_voxelsize_and_dimension(SUV_path);
+
+% Check if both images have same voxelsize and dimension
 if ~isequal(vs1,vs2) || ~isequal (dim1,dim2)
+    
+    % Talk to logfile
+    fprintf(fid,'PET to T1 coregistration started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
+    
+    % Coregister
     [rSUV,~]=LTNP_spm12_coregister_reslice(T1_path,SUV_path,outfolder);
+    
 else
+    
+    % Talk to logfile
+    fprintf(fid,'PET already coregistred to T1 \n');
     rSUV=SUV_path;
 end
 
-%% 4/ Apply PVC on coregistred processed PET if required
+%% 4/ Apply PVC on coregistred processed PET
+%[pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
 if nargin==6
     pvc='none';
 end
 if isequal(pvc,'RBV')
+    
+    % Talk to logfile
+    fprintf(fid,'RBV original PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
+    
+    % Apply RBV
     [pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
+    
+elseif isequal(pvc,'RB')
+    
+    % Talk to logfile
+    fprintf(fid,'RB PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
+    
+    % Apply RB
+    [pvcSUV]=LTNP_PVC_RB('SUV',script_dir,rSUV,segmentation,outfolder);
+    
 elseif isequal(pvc,'MG_orig')
+    
+    % Talk to logfile
+    fprintf(fid,'MG original PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
+    
+    % Apply MG_orig
     [pvcSUV,~,~] = LTNP_PVC_MG(rSUV,GMpath,WMpath,FWHM,outfolder,WM_VOI);
+    
 elseif isequal(pvc,'MG_modif')
+        
+    % Talk to logfile
+    fprintf(fid,'MG modified PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
+    
+    % Apply MG_modif
     [~,pvcSUV,~] = LTNP_PVC_MG(rSUV,GMpath,WMpath,FWHM,outfolder,WM_VOI);
+    
 elseif isequal(pvc,'none') % change name of non corrected rSUV for further processing, keep original rSUV file
+        
+    % Talk to logfile
+    fprintf(fid,'PVC not required \n');
+    
+    % PVC not required
     [folder,name,ext]=fileparts(rSUV);
     pvcSUV=fullfile(folder,[name '_no_pvc' ext]);
     copyfile(rSUV,pvcSUV);
@@ -145,13 +220,22 @@ end
 
 %% 5/ Make refVOI
 if RR_ready
+    
+    % Talk to logfile
+    fprintf(fid,'Assuming reference region is in subject space \n');
+
     if ischar(rr)
         refVOI=rr;
     elseif isnumeric(rr)
         refVOI=fullfile(outfolder,['refVOI_mask_' erase(num2str(22),' ') '.nii']);
         LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
     end
+    
 else
+    
+    % Talk to logfile
+    fprintf(fid,'Warping of reference region to subject space \n');
+    
     if FreeS || FastS
         if ischar(rr)
             [~,invdef]=LTNP_cat12_calc_deformation_field(T1_path,outfolder);
@@ -175,12 +259,18 @@ end
 [~,refVOI_name,~]=fileparts(refVOI);
 
 %% 6/ Make SUVR image
+
+fprintf('Calculating SUVR image for subject %s \n',subjectcode);
 [~,~,~,SUVR_path]=LTNP_calculate_SUVR(rSUV,refVOI,outfolder); % before rbv
 [~,SUVR_name,~]=fileparts(SUVR_path);
 [~,~,~,SUVR_pvc_path]=LTNP_calculate_SUVR(pvcSUV,refVOI,outfolder); % after rbv
 [~,SUVR_pvc_name,~]=fileparts(SUVR_pvc_path);
 
 %% 7/ Get PET and T1 statistics
+
+fprintf('Calculating statistics \n');
+
+% Calculate PVC and non PVC image statistics for SUVR, and the reference region 
 [SUVR_table,~,~]=LTNP_VOI_stats_v8(SUVR_path,segmentation,'');
 [SUV_rr_table,~,~]=LTNP_VOI_stats_v8(rSUV,refVOI,'');
 [SUVR_pvc_table,~,~]=LTNP_VOI_stats_v8(SUVR_pvc_path,segmentation,'');

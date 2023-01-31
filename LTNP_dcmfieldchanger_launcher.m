@@ -1,5 +1,5 @@
 % change dicom header info
-dcmfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/UCBJ_4s_ECT/post/B079';
+dcmfolder='/Volumes/LaCie/Thomas/Projects/RETINAL_IMAGING/DATA/RAW/AMYLOID/MCI009';
 field_path='PatientWeight';
 field_value=88; % has to be a number
 %field_path='RadiopharmaceuticalInformationSequence.Item_1.RadionuclideTotalDose';

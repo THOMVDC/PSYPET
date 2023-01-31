@@ -9,9 +9,13 @@ function [accT1nii, ptname, ptID]=LTNP_preproc_T1_spm(dcmfolder,outfolder,outnam
         D='unknown';
     else
         [ptname, ptID]=LTNP_dcm2nii(dcmfolder,outfolder,outname(1:end-4)); % transform to nifti
+        
         % Center T1
         T1nii=fullfile(outfolder,outname);
         accT1nii=fullfile(outfolder,['acc' outname]);
         LTNP_center(T1nii,accT1nii)
+        
+        % No crop
+        
     end    
 end

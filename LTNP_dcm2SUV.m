@@ -103,7 +103,7 @@ function [ptname,ptID,bodyweight, injdosis, acqtime, injtime, halftime, filelist
     dt=datetime(acqtime,'InputFormat','HHmmss')-datetime(injtime,'InputFormat','HHmmss.SSS');
     dt=seconds(dt); % in seconds
     
-    if dt<3000
+    if dt<1800
         error('difference between acquisition time and injection time is doubtfully small')
     end
     
