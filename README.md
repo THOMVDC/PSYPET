@@ -11,10 +11,10 @@ The pipeline is compatible with already segmented/parcellated T1 data from other
 		- Realignment to first frame
 		- Averaging all frames into one image
 		- Conversion to a SUV image
-	2. T1 processing
+	2. T1 preprocessing
 		- Dicom to nifti conversion
 		- Centering
-		- Segmentation/ Parcellation 
+		- CAT12.6 Segmentation/ Parcellation 
 	3. Coregistration of processed PET to T1 image
 	4. PVC if required
 	5. Creation of reference region in patient space
@@ -102,10 +102,10 @@ Thomas Vande Casteele, Neuropsychiatry, KU Leuven
 
 ## Acknowledgments
 
-Patrick Dupont
-Michel Koole
-Nathalie Mertens
-Laura Michiels
-Maarten Laroy
+	Patrick Dupont
+	Michel Koole
+	Nathalie Mertens
+	Laura Michiels
+	Maarten Laroy
 
 ## License
