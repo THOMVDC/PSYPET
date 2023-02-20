@@ -84,11 +84,11 @@
 #### Four scenarios
 
 	1. T1 and PET data are not processed yet
-		- enter the raw dicom files for both input arguments (***PET***, ***T1***). Choose your atlas preferences ('Freesurfer', 'Fastsurfer' or 'any CAT12 supported atlas') and psypet take cares of everything.
+		- enter the path to raw dicom files folder for both input arguments (PET, T1). Choose your atlas preferences ('Freesurfer', 'Fastsurfer' or 'any CAT12 supported atlas') and psypet takes care of everything.
 	2. PET data is already processed, not T1 data
-		- enter the processed nifti file path for input argument ***PET*** (psypet takes care of coregistration if not done yet) and the raw dicom files for input argument ***T1***. Choose your atlas preference 'Freesurfer','Fastsurfer' or 'any CAT12 supported atlas')
+		- enter the processed nifti file path for input argument PET (psypet takes care of coregistration if not done yet) and the raw dicom files for input argument T1. Choose your atlas preference 'Freesurfer','Fastsurfer' or 'any CAT12 supported atlas')
 	3. T1 data is processed, not PET data
-		- enter the processed nifti file path into the input argument ***T1*** and the segmentation path in patient space into the input argument ***atlas*** and the reference region in patient space into the input argument ***rr***. Raw dicom files for the input variable ***PET***.
+		- enter the processed nifti file path into the input argument T1 and the segmentation path in patient space into the input argument atlas and the reference region in patient space into the input argument rr. Raw dicom files for the input variable PET.
 	4. T1 data and PET data are processed
 		- see conditions of the second and third scenario's
 
