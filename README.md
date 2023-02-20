@@ -8,17 +8,15 @@ The pipeline is compatible with already segmented/parcellated T1 data from other
 	1. PET preprocessing
 		- Dicom to nifti conversion
 		- Centering
-		- Avering to first frame
 		- Realignment to first frame
-		- Avering of all frames into one image
+		- Averaging all frames into one image
 		- Conversion to a SUV image
 	2. T1 processing
 		- Dicom to nifti conversion
 		- Centering
-		- Segmentation
-		 Parcellation 
+		- Segmentation/ Parcellation 
 	3. Coregistration of processed PET and T1 images
-	4. PVC
+	4. PVC if required
 	5. Creation of reference region in patient space
 	6. Creation of SUVR image
 	7. Calculation of statistical data in ROIs from the atlas of choice
