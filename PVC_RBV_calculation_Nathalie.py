@@ -162,7 +162,7 @@ def rbv_pvc(subject,pet_dir,seg_dir,output_pvc,fwhm):
     
     #Determine smoothing values for each dimension.
     voxSize = pet.header.get_zooms()
-    sigmas = np.divide(fwhm[0]/np.sqrt(8.0*np.log(2.0)),voxSize[0:3])
+    sigmas = np.divide([fwhm]/np.sqrt(8.0*np.log(2.0)),voxSize[0:3])
     
     # Matrix w is de GTM matrix, berekend via:
         # = spill-over van ene voi naar andere voi
@@ -253,7 +253,7 @@ def rbv_pvc(subject,pet_dir,seg_dir,output_pvc,fwhm):
         np.savetxt(output_pvc + subject + '_rsfAvg.txt',roiCoef)
     
     # Save RBV image
-    rbv_dir = os.path.join(output_pvc,subject + '_PET_PVC_RBV_65mm_in_seg.nii')
+    rbv_dir = os.path.join(output_pvc,subject + '_PET_PVC_RBV_' str(fwhm).replace('.','_') 'mm_in_seg.nii')
     rbv = nib.Nifti1Image(rbvData,petAffine)
     rbv.to_filename(rbv_dir)
     print('RBV PVC PET calculation done.')

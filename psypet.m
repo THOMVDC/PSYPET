@@ -203,7 +203,7 @@ elseif isequal(pvc,'RBV_5mm')
     
     % Apply RBV
     fwhm=5;
-    [pvcSUV]=LTNP_PVC_RBV_5mm('SUV',script_dir,rSUV,segmentation,outfolder,fwhm);
+    [pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder,fwhm);
     
 elseif isequal(pvc,'RB')
     
