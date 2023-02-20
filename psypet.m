@@ -59,6 +59,16 @@ fid  = fopen(name_logfile,'a+');
 % Talk to logfile
 fprintf(fid,'psypet.m \n');
 fprintf(fid,'working on subject %s \n',subj);
+fprintf(fid,'with following input arguments : \n');
+fprintf(fid,'T1 = %s \n',T1);
+fprintf(fid,'PET = %s \n',PET);
+fprintf(fid,'rr = %s \n',rr);
+fprintf(fid,'atlas = %s \n',atlas);
+fprintf(fid,'outfolder = %s \n',outfolder);
+if nargin==6
+    pvc='none';
+    fprintf(fid,'pvc = %s \n',pvc);
+end
 
 %% 1/ Process PET if not done yet
 if endsWith(PET,'.nii')
@@ -175,17 +185,25 @@ end
 
 %% 4/ Apply PVC on coregistred processed PET
 %[pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
-if nargin==6
-    pvc='none';
-end
-if isequal(pvc,'RBV')
+if isequal(pvc,'RBV_6.5mm')
     
     % Talk to logfile
     tmp=clock;
     fprintf(fid,'RBV original PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Apply RBV
-    [pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
+    fwhm=6.5;
+    [pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder,fwhm);
+    
+elseif isequal(pvc,'RBV_5mm')
+    
+    % Talk to logfile
+    tmp=clock;
+    fprintf(fid,'RBV original PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
+    
+    % Apply RBV
+    fwhm=5;
+    [pvcSUV]=LTNP_PVC_RBV_5mm('SUV',script_dir,rSUV,segmentation,outfolder,fwhm);
     
 elseif isequal(pvc,'RB')
     
@@ -223,6 +241,9 @@ elseif isequal(pvc,'none') % change name of non corrected rSUV for further proce
     [folder,name,ext]=fileparts(rSUV);
     pvcSUV=fullfile(folder,[name '_no_pvc' ext]);
     copyfile(rSUV,pvcSUV);
+    
+else
+    error('PVC method is not recognisable or not implemented in psypet')
 end
 
 %% 5/ Make refVOI
@@ -234,7 +255,7 @@ if RR_ready
     if ischar(rr)
         refVOI=rr;
     elseif isnumeric(rr)
-        refVOI=fullfile(outfolder,['refVOI_mask_' erase(num2str(22),' ') '.nii']);
+        refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
         LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
     end
     
@@ -250,7 +271,7 @@ else
             %[refVOI]=LTNP_spm12_warp_ROI(rr,invdef,outfolder,voxelsize);
             
         elseif isnumeric(rr)
-            refVOI=fullfile(outfolder,['refVOI_mask_' erase(num2str(22),' ') '.nii']);
+            refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
             LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
         end
     elseif CAT12
@@ -258,7 +279,7 @@ else
             [refVOI]=LTNP_cat12_warp_ROI(rr,invdef,outfolder);
             %[refVOI]=LTNP_spm12_warp_ROI(rr,invdef,outfolder,voxelsize);
         elseif isnumeric(rr)
-            refVOI=fullfile(outfolder,['refVOI_mask_' erase(num2str(22),' ') '.nii']);
+            refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
             LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
         end
     end 
