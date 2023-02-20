@@ -1,7 +1,7 @@
 # PSYPET
 
-The psypet processing pipeline is written in Matlab and relies on a correct working installation of CAT12.6.
-The pipeline is compatible with already segmented/parcellated T1 data from other software.
+	The psypet processing pipeline is written in Matlab and relies on a correct working installation of CAT12.6.
+	The pipeline is compatible with already segmented/parcellated T1 data from other software.
 
 ## Main steps
 
@@ -39,7 +39,7 @@ The pipeline is compatible with already segmented/parcellated T1 data from other
 
 ### Running 
 
-The main function is “psypet.m” and can be launched with “psypet_launcher.m”. 
+	The main function is “psypet.m” and can be launched with “psypet_launcher.m”. 
 
 
 #### Input arguments:
@@ -98,7 +98,7 @@ The main function is “psypet.m” and can be launched with “psypet_launcher.
 
 ## Author
 
-Thomas Vande Casteele, Neuropsychiatry, KU Leuven
+	Thomas Vande Casteele, Neuropsychiatry, KU Leuven
 
 ## Acknowledgments
 
