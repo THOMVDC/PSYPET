@@ -15,7 +15,7 @@ The pipeline is compatible with already segmented/parcellated T1 data from other
 		- Dicom to nifti conversion
 		- Centering
 		- Segmentation/ Parcellation 
-	3. Coregistration of processed PET and T1 images
+	3. Coregistration of processed PET to T1 image
 	4. PVC if required
 	5. Creation of reference region in patient space
 	6. Creation of SUVR image
@@ -44,40 +44,41 @@ The main function is “psypet.m” and can be launched with “psypet_launcher.
 
 #### Input arguments:
  
-	1. ***subj***
+	1. subj
 		- the name of the subj (string)
  
-	2. ***T1***
+	2. T1
 		- the path to the raw dicom folder, or path to the processed nifti file
         	- if raw dicom folder : we will process the dcm (conversion to nifti, centering, segmentation)
         	- if nifti file : we consider the T1 as already processed by the psypet pipeline. The atlas input argument will be considered as the segmentation and the rr as the path to the reference region in subject space (number or string)
   
-	3. ***PET***
+	3. PET
 		- the path to the raw dicom folder, or path to the processed nifti file
         	- if raw dicom folder : we will process the dcm (conversion to nifti, realignement, averaging, SUV calculation)
         	- if nifti file : we consider the PET acquisition as already processed by the psypet pipeline.
   
-	4. ***rr***
+	4. rr
 		- reference region, can be a number (5), a numeric array ([5,7,8]) or a path to mni (spm) ref region template
   
-	5. ***atlas/segmentation***
+	5. atlas
         - if T1 is a nifti file, we consider "atlas" as the result of the segmentation (i.e. aparc+aseg.nii or other)
         - if T1 is a dcm folder, we consider "atlas" as the one to be obtained: 'Freesurfer', 'Fastsurfer' or 'any CAT12 suppported atlas' (ex: neuromorphometrics)
 
-	6. ***outfolder***
+	6. outfolder
 		- the output folder of your choice
 
-Optional input arguments (under construction)
-	1. ***pvc***
-		- string, either 'MG_orig', 'MG_modif' (muller gartner model) or 'RBV' (region based voxelwise)
+#### Optional input arguments
+	1. pvc (under construction)
+		- 'RBV' for region based voxelwise partial volume correction
+		- 'MG_orig' for Muller Gartner partial volume correction
 
 #### Output arguments
 
-    1. ***SUVR_path***
+    1. SUVR_path
 		- path to the SUVR image
-    2. ***SUVR_table_path***
+    2. SUVR_table_path
 		- path to excel file with mean, median, uptake, volume for each ROI from the specified atlas
-	3. ***SUV_rr_table_path***
+	3. SUV_rr_table_path
 		- path to the SUV excel file of the reference region
 
 #### Four scenarios
