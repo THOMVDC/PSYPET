@@ -26,15 +26,15 @@ T1dir_atlas='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output
 %deffolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/cat12_output/mri';
 %outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/pet_output';
 %outfolder=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4_ECT/fs/imaging/'  ect];
-outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/output/psypet_cat12_output_SO_mci';
+outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/psypet_cat12_output_SO_mci';
 %outfolder_xls=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4_ECT/fs/stats/'  ect];
-outfolder_xls='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/output/psypet_cat12_stats_SO_mci';
+outfolder_xls='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/FLUT/output/';
 refVOI='/Volumes/LaCie/Thomas/Projects/SCRIPTS/PSYPET/templates/TemplateSO_78subj_SPM_Juli2020.nii';
 %atlas='neuromorphometrics';
 %refVOI=[13,14,37,38,39,40,41,42];
 
 % Loop through subjects B066,B070, B073, B077
-subjects=dir(fullfile(PETdir, 'MCI*'));
+subjects=dir(fullfile(PETdir, 'B*'));
 %subjects={'B066','B070','B073','B077'};
 
 %% Launcher for CAT12

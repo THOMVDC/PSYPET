@@ -6,7 +6,7 @@ function LTNP_cat12_6_segment_parallel(T1, output_folder, voxelsize, wmhc, atlas
 % as the respective T1 images
 %
 % Input:
-%       T1 = cell(n,) with the n absolute paths to anatomical T1 images in nifti
+%       T1 = cell(n,1) with the n absolute paths to anatomical T1 images in nifti
 %       output_folder = string, absolute path to the output_folder of choice
 %       wmhc = numeric, should be equal to 1 (wmh map output) or to 0 (no wmh map output)
 %              ! the cat.extopts.WMHC should be set to 2 (considers WMH and corrects segmentation to WM)

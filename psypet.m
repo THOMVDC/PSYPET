@@ -68,6 +68,7 @@ if endsWith(PET,'.nii')
     SUV_path=PET;
 else
     % Talk to logfile
+    tmp=clock;
     fprintf(fid,'PET preprocessing started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
         
     % Make a subfolder
@@ -106,6 +107,7 @@ if endsWith(T1,'.nii')
 else
     
     % Talk to logfile
+    tmp=clock;
     fprintf(fid,'T1 preprocessing started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Set gates
@@ -158,6 +160,7 @@ end
 if ~isequal(vs1,vs2) || ~isequal (dim1,dim2)
     
     % Talk to logfile
+    tmp=clock;
     fprintf(fid,'PET to T1 coregistration started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Coregister
@@ -178,6 +181,7 @@ end
 if isequal(pvc,'RBV')
     
     % Talk to logfile
+    tmp=clock;
     fprintf(fid,'RBV original PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Apply RBV
@@ -186,6 +190,7 @@ if isequal(pvc,'RBV')
 elseif isequal(pvc,'RB')
     
     % Talk to logfile
+    tmp=clock;
     fprintf(fid,'RB PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Apply RB
@@ -194,6 +199,7 @@ elseif isequal(pvc,'RB')
 elseif isequal(pvc,'MG_orig')
     
     % Talk to logfile
+    tmp=clock;
     fprintf(fid,'MG original PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Apply MG_orig
@@ -202,6 +208,7 @@ elseif isequal(pvc,'MG_orig')
 elseif isequal(pvc,'MG_modif')
         
     % Talk to logfile
+    tmp=clock;
     fprintf(fid,'MG modified PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Apply MG_modif
@@ -260,7 +267,7 @@ end
 
 %% 6/ Make SUVR image
 
-fprintf('Calculating SUVR image for subject %s \n',subjectcode);
+fprintf('Calculating SUVR image for subject %s \n',subj);
 [~,~,~,SUVR_path]=LTNP_calculate_SUVR(rSUV,refVOI,outfolder); % before rbv
 [~,SUVR_name,~]=fileparts(SUVR_path);
 [~,~,~,SUVR_pvc_path]=LTNP_calculate_SUVR(pvcSUV,refVOI,outfolder); % after rbv

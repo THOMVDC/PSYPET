@@ -81,23 +81,26 @@ end
 
 %% AMY positivity stats%;
 tracer='UCBJ';
-petdir=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET/' tracer '_4s'];
+%petdir=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET/' tracer '_4s'];
+petdir='/Volumes/LaCie/Thomas/Projects/RETINAL_IMAGING/DATA/CENTILOID/';
 t1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET/T1';
-name_excel='/Volumes/LaCie/Thomas/Projects/UCBJ_paper/T1_compVOI.xlsx';
+%name_excel='/Volumes/LaCie/Thomas/Projects/UCBJ_paper/T1_compVOI.xlsx';
+name_excel='/Volumes/LaCie/Thomas/Projects/RETINAL_IMAGING/DATA/CENTILOID/centiloid_compVOI_values.xlsx';
+'B046/processed/clSUVR_cerebellum_90min_120min.nii
 %name_excel='/Users/tvdcas1/Desktop/rbv_amy_pos.xls';
 atlas_path='/Volumes/LaCie/Thomas/Projects/SCRIPTS/AMYWM/LCN_Dupont/resl_to_wmc1_SPM12_aal_composite_cortical.img'; % mask or atlas
 VOIdetails_path='/Volumes/LaCie/Thomas/Projects/SCRIPTS/AMYWM/LCN_Dupont/resl_to_wmc1_SPM12_aal_composite_cortical.csv'; % csv with voi details of the given atlas/mask
-cd(petdir)
-l=dir('*0*'); 
-for i=1:length(l)
-    subj=l(i).name;
+subjects=dir(fullfile(petdir, '*'));
+for i=1:length(subjects)
+    subj=subjects(i).name;
     disp(subj)
-    SUVR_dir=dir(fullfile(petdir,subj,'psypet*',tracer,'SUVR',['SUVR_wrrrSUV_*' subj '*.nii'])); % change path construction to grab the desired SUVR
+    SUVR_path=fullfile(petdir,subj,'processed','clSUVR_cerebellum_90min_120min.nii');
+    %SUVR_dir=dir(fullfile(petdir,subj,'psypet*',tracer,'SUVR',['SUVR_wrrrSUV_*' subj '*.nii'])); % change path construction to grab the desired SUVR
     %SUVR_dir=dir(fullfile(petdir,subj,'psypet*',tracer,'SUVR',['SUVR_wPVC_RBV_' subj '*.nii'])); % rbv one
-    SUVR_path=fullfile(SUVR_dir(1).folder,SUVR_dir(1).name);
+    %SUVR_path=fullfile(SUVR_dir(1).folder,SUVR_dir(1).name);
     GMmask_path=fullfile(t1dir,subj,'CAT12','mri',['mwp1accT1_' subj '.nii']); % change path construction to grab the desired GM mask
-    SUVR_path=GMmask_path;
-    [SUVR_GM_table,~,~]=LTNP_VOI_stats_v7(atlas_path,VOIdetails_path,SUVR_path,GMmask_path);
+    %SUVR_path=GMmask_path;
+    [SUVR_GM_table,~,~]=LTNP_VOI_stats_v8(SUVR_path,atlas_path,VOIdetails_path,GMmask_path);
     if i==1
         SUVR_GM_table{1,1}=SUVR_GM_table{2,1};
         SUVR_GM_table{2,1}=subj;
@@ -441,6 +444,5 @@ end
 
 % Write overview
 writecell(volumes,name_excel)
-
 
 
