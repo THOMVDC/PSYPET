@@ -31,13 +31,19 @@
 ### Prerequisites
 
 	Make sure you have a correct working installation of CAT12.6
-	See https://neuro-jena.github.io/cat/
-	See https://www.neuro.uni-jena.de/cat12/ choose cat12_r1432
+	General information: https://neuro-jena.github.io/cat/
+	Download site: https://www.neuro.uni-jena.de/cat12/ -> choose cat12_r1432
 
 ### Installing
 
 	Download the psypet code in the folder of your choice, unzip if needed, and add that folder to your Matlab search path.
+	
 	addpath(genpath('/folder/of/choice/PSYPET/'));
+
+	To test this, type
+
+	which psypet.m
+
 	See https://www.mathworks.com/help/matlab/ref/addpath.html
 	See https://www.mathworks.com/help/matlab/matlab_env/add-folders-to-matlab-search-path-at-startup.html
 

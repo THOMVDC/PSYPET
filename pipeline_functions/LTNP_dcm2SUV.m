@@ -12,6 +12,8 @@ function [rescale_factor, filelist_SUV]=LTNP_dcm2SUV(dicomdir,outputdir,outname)
     outputdir_TMP=fullfile(outputdir,'tmp');
     
     % Grab dcm frames
+    list=dir(dicomdir);
+    list=list(~startsWith({list.name}, '.')); % removing hidden files from the list
     nr_dcmframes=length(list);
     dcmframes = cell(nr_dcmframes,1);
     for i = 1:nr_dcmframes

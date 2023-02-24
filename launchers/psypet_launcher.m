@@ -1,41 +1,23 @@
 
 
-% better to take brain.nii as T1 than nu.nii for bringing the SO to subject
-% <-> but quid for corgestritaiton pet/t1 : is nu.nii better or brain.nii ?
-% Doesnot look like so; but T1.nii did well. T1 is also the last being
-% processed before aparc+asegDKT, so we'll take T1.nii
-% aparc.DKTatlas+aseg.deep.withCC.mgz
+%% Background
 
-%ect='post';
+% Launcher example for LTNP_preproc_T1_spm
+%
+% Author: 
+%       Thomas Vande Casteele, KU Leuven
 
-% Define input and output dir
-%PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/pet_output/';
-%PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/psypet_fs_output';
-%PETdir='/Volumes/LaCie/Margot/aline/UCBJ_psypet1';
-%PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/MK62_4s';
 PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/UCBJ_4s';
-%PETdir=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/UCBJ_4s_ECT/' ect];
-%PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/output/psypet_cat12_output_SOnoWML_as_rr';
-%T1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/fastsurfer_output';
-%T1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/T1/DICOM';
 T1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/input';
-%T1dir=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4_ECT/fs/imaging/'  ect];
-%T1dir_atlas='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/cat12_output/';
 T1dir_atlas='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/psycat';
-%T1dir='/Volumes/LaCie/Margot/aline/T1_fastsurfer/fastsurfer_output';
-%deffolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/cat12_output/mri';
-%outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/pet_output';
-%outfolder=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4_ECT/fs/imaging/'  ect];
 outfolder='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/output/psypet_cat12_output_SO_mci';
-%outfolder_xls=['/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4_ECT/fs/stats/'  ect];
 outfolder_xls='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/UCBJ/output/psypet_cat12_stats_SO_mci';
 refVOI='/Volumes/LaCie/Thomas/Projects/SCRIPTS/PSYPET/templates/TemplateSO_78subj_SPM_Juli2020.nii';
 %atlas='neuromorphometrics';
 %refVOI=[13,14,37,38,39,40,41,42];
 
 % Loop through subjects B066,B070, B073, B077
-subjects=dir(fullfile(PETdir, 'MCI*'));
-%subjects={'B066','B070','B073','B077'};
+subjects=dir(fullfile(PETdir, 'B*'));
 
 %% Launcher for CAT12
 for s=1:length(subjects)
