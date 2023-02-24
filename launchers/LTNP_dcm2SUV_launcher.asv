@@ -1,0 +1,32 @@
+
+%% Background
+
+% Launcher example for LTNP_dcm2SUV 
+%
+% Author: 
+%       Thomas Vande Casteele, KU Leuven
+
+%% Settings
+
+subj='B001';
+inputdir = '/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET/UCBJ_4s/';
+outputdir = '/Users/tvdcas1/Desktop/';
+outputname = 'SUV';
+
+
+%% Launch for single subject
+dcmfolder=fullfile(inputdir,subj);
+outname=fullfile(outputdir,[outputname '_' subj]);
+[~,~]=LTNP_dcm2SUV(dcmfolder,outputdir,outname);
+
+
+%% Launch for multiple subjects
+l=dir(inputdir);
+
+for s=1:length(l)
+    subj=l(s).name;
+    dcmfidir=fullfile(inputdir,subj);
+    outname=fullfile(outputdir,[outputname '_' subj]);
+    [~,~]=LTNP_dcm2SUV(dicomdir,outputdir,outname);
+end
+

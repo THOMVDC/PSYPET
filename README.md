@@ -1,7 +1,10 @@
 # PSYPET
 
-	The psypet processing pipeline is written in Matlab and relies on a correct working installation of CAT12.6.
+	The psypet main pipeline takes a static PET image and a T1-weighted image as input, and produces SUV and SUVR images in native space.
+	ROI-statistics from an atlas of choice are generated automatically in excel.
 	The pipeline is compatible with already segmented/parcellated T1 data from other software.
+	Psypet compiles handy functions such as an uptake calculator, dcm2SUV converter, centering of images on the AC-PC, ...
+    Psypet is written in Matlab and relies on a correct working installation of CAT12.6.
 
 ## Main steps
 
@@ -34,6 +37,7 @@
 ### Installing
 
 	Download the psypet code in the folder of your choice, unzip if needed, and add that folder to your Matlab search path.
+	addpath(genpath('/folder/of/choice/PSYPET/'));
 	See https://www.mathworks.com/help/matlab/ref/addpath.html
 	See https://www.mathworks.com/help/matlab/matlab_env/add-folders-to-matlab-search-path-at-startup.html
 
