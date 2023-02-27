@@ -30,6 +30,7 @@ spm_dir_tpm = fullfile(spm_dir,'tpm');
 cat_dir     = fullfile(spm_dir,'toolbox','cat12');
 addpath(spm_dir);
 addpath(cat_dir);
+cat12('expert');
 
 % Making output folder with a copy of T1
 if ischar(T1)

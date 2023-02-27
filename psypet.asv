@@ -196,12 +196,9 @@ elseif isequal(pvc,'none') % change name of non corrected rSUV for further proce
         
     % Talk to logfile
     fprintf(fid,'PVC not required \n');
-
+       
 else
-    
-    % Error
     error('PVC method is not recognisable or not implemented in psypet')
-    
 end
 
 %% 5/ Make refVOI
@@ -245,12 +242,16 @@ end
 
 fprintf(fid,'Calculating SUVR image for subject %s \n',subj);
 
-% Make non pvc SUVR image
-[~,~,~,SUVR_path]=LTNP_calculate_SUVR(rSUV,refVOI,outfolder);
-[~,SUVR_name,~]=fileparts(SUVR_path);
-
-% Make pvc SUVR if required
-if ~isequal(pvc,'none')    
+% After pvc
+if isequal(pvc,'none')
+    [folder,name,ext]=fileparts(rSUV);
+    rSUVnopvc=fullfile(folder,[name '_no_pvc' ext]);
+    movefile(rSUV,rSUVnopvc);
+    [~,~,~,SUVR_path]=LTNP_calculate_SUVR(rSUVnopvc,refVOI,outfolder);
+    [~,SUVR_name,~]=fileparts(SUVR_path);
+else
+    [~,~,~,SUVR_path]=LTNP_calculate_SUVR(rSUV,refVOI,outfolder);
+    [~,SUVR_name,~]=fileparts(SUVR_path);
     [~,~,~,SUVR_pvc_path]=LTNP_calculate_SUVR(pvcSUV,refVOI,outfolder); % after pvc
     [~,SUVR_pvc_name,~]=fileparts(SUVR_pvc_path);
 end
@@ -259,21 +260,22 @@ end
 
 fprintf(fid,'Calculating statistics \n');
 
-% Calculate non PVC image statistics for SUVR, and the reference region 
+% Calculate PVC and non PVC image statistics for SUVR, and the reference region 
 [SUVR_table,~,~]=LTNP_VOI_stats(SUVR_path,segmentation,'');
 [SUV_rr_table,~,~]=LTNP_VOI_stats(rSUV,refVOI,'');
+[SUVR_pvc_table,~,~]=LTNP_VOI_stats(SUVR_pvc_path,segmentation,'');
+[SUV_pvc_rr_table,~,~]=LTNP_VOI_stats(pvcSUV,refVOI,'');
+
+% Save statistics
 SUVR_table_path=fullfile(outfolder,[SUVR_name '.xlsx']);
 SUV_rr_table_path=fullfile(outfolder,[refVOI_name '.xlsx']);
+SUVR_pvc_table_path=fullfile(outfolder,[SUVR_pvc_name '.xlsx']);
+SUV_pvc_rr_table_path=fullfile(outfolder,['PVC_' refVOI_name '.xlsx']);
+
 writecell(SUVR_table,SUVR_table_path,'sheet',subj)
 writecell(SUV_rr_table,SUV_rr_table_path,'sheet',subj)
+writecell(SUVR_pvc_table,SUVR_pvc_table_path,'sheet',subj)
+writecell(SUV_pvc_rr_table,SUV_pvc_rr_table_path,'sheet',subj)
 
-% Calculate PVC image statistics for SUVR, and the reference region 
-if ~isequal(pvc,'none')
-    [SUVR_pvc_table,~,~]=LTNP_VOI_stats(SUVR_pvc_path,segmentation,'');
-    [SUV_pvc_rr_table,~,~]=LTNP_VOI_stats(pvcSUV,refVOI,'');
-    SUVR_pvc_table_path=fullfile(outfolder,[SUVR_pvc_name '.xlsx']);
-    SUV_pvc_rr_table_path=fullfile(outfolder,['PVC_' refVOI_name '.xlsx']);
-    writecell(SUVR_pvc_table,SUVR_pvc_table_path,'sheet',subj)
-    writecell(SUV_pvc_rr_table,SUV_pvc_rr_table_path,'sheet',subj)
 end
 
