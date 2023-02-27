@@ -11,6 +11,7 @@ function [SUVR_path, SUVR_table_path, SUVR_pvc_path, SUVR_pvc_table_path, SUV_rr
 % Grab script path
 script = mfilename('fullpath');
 [script_dir,~,~]=fileparts(script);
+python_dir=fullfile(script_dir,'python');
 
 % Make logfile
 name_logfile = fullfile(outfolder,'psypet_log.txt');
@@ -153,7 +154,7 @@ if isequal(pvc,'RBV')
     
     % Apply RBV
     fwhm=6.5;
-    [pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder,fwhm);
+    [pvcSUV]=LTNP_PVC_RBV('SUV',python_dir,rSUV,segmentation,outfolder,fwhm);
     
 elseif isequal(pvc,'RBV_5mm')
     
@@ -163,7 +164,7 @@ elseif isequal(pvc,'RBV_5mm')
     
     % Apply RBV
     fwhm=5;
-    [pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder,fwhm);
+    [pvcSUV]=LTNP_PVC_RBV('SUV',python_dir,rSUV,segmentation,outfolder,fwhm);
     
 elseif isequal(pvc,'RB')
     
@@ -172,7 +173,7 @@ elseif isequal(pvc,'RB')
     fprintf(fid,'RB PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Apply RB
-    [pvcSUV]=LTNP_PVC_RB('SUV',script_dir,rSUV,segmentation,outfolder);
+    [pvcSUV]=LTNP_PVC_RB('SUV',python_dir,rSUV,segmentation,outfolder);
     
 elseif isequal(pvc,'MG_orig')
     

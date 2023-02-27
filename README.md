@@ -39,6 +39,7 @@
 	Download the psypet code in the folder of your choice, unzip if needed, and add that folder to your Matlab search path.
 	
 	addpath(genpath('/folder/of/choice/PSYPET/'));
+      savepath
 
 	To test this, type
 
