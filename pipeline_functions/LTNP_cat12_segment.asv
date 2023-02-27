@@ -1,4 +1,4 @@
-function [TIV,deformation_field, invdeformation_field,GM_path,WM_path,CSF_path]=LTNP_cat12_segment(T1, output_folder, voxelsize, wmhc, atlas)
+function [TIV,deformation_field, invdeformation_field]=LTNP_cat12_segment(T1, output_folder, voxelsize, wmhc, atlas)
 
 %% Background
 % 
@@ -211,7 +211,7 @@ CAT12_vol_thick=load(fullfile(output_folder,'report',['cat_' image_name '.mat'])
 %thickness=cell2mat(CAT12_vol_thick.S.subjectmeasures.dist_thickness);
 TIV=CAT12_vol_thick.S.subjectmeasures.vol_TIV;
 
-% Grab paths of deformation fields and probability maps
+% Grab paths of deformation fields and segmen
 deformation_field = fullfile(output_folder,'mri',['y_' image_name image_ext]);
 invdeformation_field = fullfile(output_folder,'mri',['iy_' image_name image_ext]);
 GM_path=fullfile(output_folder,'mri',['p1' image_name image_ext]);

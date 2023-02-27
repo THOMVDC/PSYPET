@@ -8,7 +8,7 @@ voxelsize=1.5; %isotropic
 [~, T1name, T1ext]=fileparts(T1);
 
 % Segment T1 and grab the inverse deformation field (mni -> patient space)
-[~,~,invdef]=LTNP_cat12_segment(T1, outfolder, voxelsize, WMHC, atlas); % also creates the deformation field (warping parameters) to MNI
+[~,~,invdef,~,~,~]=LTNP_cat12_segment(T1, outfolder, voxelsize, WMHC, atlas); % also creates the deformation field (warping parameters) to MNI
 
 % Grab tissue probability maps
 GM_path=fullfile(outfolder,'mri',['p1' T1name T1ext]);

@@ -1,25 +1,32 @@
-function [segmentation,invdef]=psycat(T1,atlas,outfolder)
+%% Background
+% Preprocess T1 dcm folder independently from psypet
 
-% Set defaults
+%% Settings
+dcmdir='';
+outfolder='';
 WMHC=1;
 voxelsize=1.5; %isotropic
+subj='B002';
 
-% Get file name of T1
-[~, T1name, T1ext]=fileparts(T1);
+%% Processing
+% Give a name to the (to be) processed image
+T1name=['T1_' subj '.nii'];
+outfolder_t1=fullfile(outfolder,subj);
+cd(outfolder);
+mkdir(subj);
+
+% Convert to nifti, center
+[accT1nii, ~, ~]=LTNP_preproc_T1_spm(dcmdir,outfolder_t1,T1name); 
+
+% delete qform
+LTNP_delete_qform(accT1nii,accT1nii) 
 
 % Segment T1 and grab the inverse deformation field (mni -> patient space)
-[~,~,invdef]=LTNP_cat12_6_segment(T1, outfolder, voxelsize, WMHC, atlas); % also creates the deformation field (warping parameters) to MNI
-
-% Grab tissue probability maps
-GM_path=fullfile(outfolder,'mri',['p1' T1name T1ext]);
-WM_path=fullfile(outfolder,'mri',['p2' T1name T1ext]);
-CSF_path=fullfile(outfolder,'mri',['p3' T1name T1ext]);
+[~,~,~,GM_path, WM_path, CSF_path]=LTNP_cat12_segment(T1, outfolder_t1, voxelsize, WMHC, atlas); % also creates the deformation field (warping parameters) to MNI
 
 % Make tissue masks
-[GMmask_path, WMmask_path, CSFmask_path,~,~]=LTNP_make_labelimage_v4(GM_path,WM_path,CSF_path,outfolder);
+[GMmask_path, WMmask_path, CSFmask_path,~,~]=LTNP_make_labelimage_v4(GM_path,WM_path,CSF_path,outfolder_t1);
 
 % Make final atlas based segmentation
 atlas_path=fullfile(outfolder,'mri_atlas',[atlas '_' T1name T1ext]);
-[~,~,~,segmentation]=LTNP_create_rbv_segm_v4(GMmask_path, WMmask_path, CSFmask_path, atlas_path, outfolder);
-   
-end
+[~,~,~,segmentation]=LTNP_create_rbv_segm_v4(GMmask_path, WMmask_path, CSFmask_path, atlas_path, outfolder_t1);
