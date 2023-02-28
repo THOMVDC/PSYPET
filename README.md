@@ -30,6 +30,7 @@
 
 ### Prerequisites
 
+	Matlab2017b or later
 	Make sure you have a correct working installation of CAT12.6
 	General information: https://neuro-jena.github.io/cat/
 	Download site: https://www.neuro.uni-jena.de/cat12/ -> choose cat12_r1432
@@ -39,7 +40,7 @@
 	Download the psypet code in the folder of your choice, unzip if needed, and add that folder to your Matlab search path.
 	
 	addpath(genpath('/folder/of/choice/PSYPET/'));
-      savepath
+    savepath
 
 	To test this, type
 
