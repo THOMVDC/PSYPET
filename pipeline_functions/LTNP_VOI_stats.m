@@ -1,7 +1,6 @@
 function [table_out,colormap,Vref]=LTNP_VOI_stats(img_path,atlas_path,VOIdetails_path,mask_path)
 %% Background %%
 %%%%%%%%%%%%%%%%
-% Written by Thomas Vande Casteele, KU Leuven
 
 % To launch this function, I refer to to the LTNP_VOI_stats_v8_launcher.m
 %
@@ -105,7 +104,7 @@ for v = 1:nr_VOIS
     table_out{1+v,4} = nanmin(tmp);
     table_out{1+v,5} = nanmax(tmp);
     table_out{1+v,6} = nanstd(tmp);
-    table_out{1+v,7} = sum(totmask>0,'all');
+    table_out{1+v,7} = sum(totmask(:)>0);
 end
 end
 
