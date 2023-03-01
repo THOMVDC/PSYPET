@@ -30,7 +30,7 @@
 
 ### Prerequisites
 
-	Matlab2017b or later
+	Matlab2017b or higher
 	Make sure you have a correct working installation of CAT12.6
 	General information: https://neuro-jena.github.io/cat/
 	Download site: https://www.neuro.uni-jena.de/cat12/ -> choose cat12_r1432
