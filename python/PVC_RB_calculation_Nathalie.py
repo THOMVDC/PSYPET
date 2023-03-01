@@ -21,6 +21,20 @@ Script to calculate RBV PVC
 #
 ####################################################################################
 
+import pip
+
+def import_or_install(package):
+    try:
+        __import__(package)
+    except ImportError:
+        pip.main(['install', package]) 
+        __import__(package)
+
+# Load packages
+packages=['os','numpy','nibabel','scipy','sys','pandas','datetime']
+for pck in packages:
+    import_or_install(pck)
+
 # Load packages
 import os
 import numpy as np
@@ -63,7 +77,7 @@ def reshape4d(array):
 
 # Define function to calculate RBV-PVC
 
-def rb_pvc(subject,pet_dir,seg_dir,output_pvc,fwhm):
+def rb_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
             
     print('Script started.')
         
@@ -202,8 +216,8 @@ def rb_pvc(subject,pet_dir,seg_dir,output_pvc,fwhm):
     
     #Save weight matricies
     if weight is None:
-        np.savetxt(output_pvc + subject + '_wMatrix.txt',wMatrix)
-    np.savetxt(output_pvc + subject + '_tMatrix.txt',tMatrix)
+        np.savetxt(os.path.join(output_pvc, output_prefix + '_wMatrix.txt',wMatrix))
+    np.savetxt(os.path.join(output_pvc,output_prefix + '_tMatrix.txt',tMatrix))
     
     #Reshape pet data back
     petData = petData.reshape((seg.shape[0],seg.shape[1],seg.shape[2],nPet))
@@ -248,12 +262,12 @@ def rb_pvc(subject,pet_dir,seg_dir,output_pvc,fwhm):
     # Save coefficients in the format user wants.
     if nii == 1:
         avg = nib.Nifti1Image(roiCoef.reshape((nRoi,1,1,nPet)),np.identity(4))
-        avg.to_filename(output_pvc + subject + '_rsfAvg.nii')
+        avg.to_filename(os.path.join(output_pvc,output_prefix+ '_rsfAvg.nii'))
     else:
-        np.savetxt(output_pvc + subject + '_rsfAvg.txt',roiCoef)
+        np.savetxt(os.path.join(output_pvc,output_prefix + '_rsfAvg.txt',roiCoef))
     
     # Save RBV image
-    rbv_dir = os.path.join(output_pvc,subject + '_PET_PVC_RB_65mm_in_seg.nii')
+    rbv_dir = os.path.join(output_pvc,output_prefix + '_PET_PVC_RB_' + fwhm + '_in_seg.nii')
     #rbv = nib.Nifti1Image(rbvData,petAffine)
     rbv = nib.Nifti1Image(rsfData,petAffine)
     rbv.to_filename(rbv_dir)
