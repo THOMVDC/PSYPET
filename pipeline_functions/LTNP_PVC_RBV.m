@@ -21,9 +21,9 @@ addpath(rbv_script_dir)
 %output_folder_tmp=fullfile(output_folder,'tmp/');
 %cd(output_folder);
 %mkdir('tmp');
-if ~endsWith(output_folder,'/')
-    output_folder=[output_folder '/'];
-end
+% if ~endsWith(output_folder,'/')
+%     output_folder=[output_folder '/'];
+% end
 
 % Run script
 rbv_path=py.PVC_RBV_calculation_Nathalie.rbv_pvc(subject,pet_path,seg_path,output_folder,fwhm);
