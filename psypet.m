@@ -1,4 +1,4 @@
-function [SUVR_path, SUVR_table_path, SUVR_pvc_path, SUVR_pvc_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, rr, atlas, outfolder,pvc)
+function [SUVR_path, SUVR_table_path, SUV_rr_table_path, SUVR_pvc_path, SUVR_pvc_table_path, SUV_pvc_rr_table_path]=psypet(subj, T1, PET, rr, atlas, outfolder,pvc)
 
 %% Script written by Thomas Vande Casteele
 
@@ -276,5 +276,9 @@ if ~isequal(pvc,'none')
     SUV_pvc_rr_table_path=fullfile(outfolder,['PVC_' refVOI_name '.xlsx']);
     writecell(SUVR_pvc_table,SUVR_pvc_table_path,'sheet',subj)
     writecell(SUV_pvc_rr_table,SUV_pvc_rr_table_path,'sheet',subj)
+else
+    SUVR_pvc_path='no pvc applied';
+    SUVR_pvc_table_path='no pvc applied';
+    SUV_pvc_rr_table_path='no pvc applied';
 end
 

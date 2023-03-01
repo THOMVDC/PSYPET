@@ -2,11 +2,24 @@
 
 %% Background
 
-% Launcher example for LTNP_preproc_T1_spm
+% Launcher example for psypet.m
 %
 % Author: 
 %       Thomas Vande Casteele, KU Leuven
 
+%% One subject
+subj='B001';
+PET='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/UCBJ_4s/B001';
+T1='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/T1/DICOM/B001';
+refVOI='/Volumes/LaCie/Thomas/Projects/SCRIPTS/PSYPET/templates/TemplateSO_78subj_SPM_Juli2020.nii';
+atlas='neuromorphometrics'; %aal, cobra, isbr, hammers,...
+outfolder='/Users/tvdcas1/Desktop/test';
+pvc='none'; %
+
+
+[SUVR_path, SUVR_table_path, SUV_rr_table_path]=psypet(subj, T1, PET, refVOI, atlas, outfolder,pvc);
+
+%% Multiple subjects
 PETdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/UCBJ_4s';
 T1dir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/input';
 T1dir_atlas='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/psycat';
@@ -91,20 +104,12 @@ for s=1:length(subjects)
     
     % Grab subject code
     subj=subjects(s).name;
-    %subj=subjects{s};
     
-    % Grab input folder
-    %T1_subj=dir(fullfile(T1dir,subj,'psypet_v2.0_processed_CAT12.7_*2022','ANAT'));         
-    %PET=fullfile(PETdir,subj,['rSUV_' subj '.nii']);
+    % Grab input folder         
+    %PET=fullfile(PETdir,subj,['rrrSUV_' subj '.nii']);
     PET=fullfile(PETdir,subj);
     T1=fullfile(T1dir,subj,'T1.nii'); % t1 fastsurfer;
-    %T1=fullfile(T1_subj(1).folder,T1_subj(1).name,['accT1_' subj '.nii']);
-    %T1=fullfile(T1dir,['accT1_' subj '.nii']);
-    %T1=fullfile(T1dir,subj);
     atlas=fullfile(T1dir,subj,'aparc+aseg.nii'); % aparc aseg fastsurfer
-    %atlas=fullfile(T1dir_atlas,subj,['rbv_segm_neuromorphometrics_accT1_' subj '.nii']);
-    %atlas=fullfile(T1dir_atlas,subj,['rbv_segm_skull_neuromorphometrics_accT1_' subj '.nii']);
-    %atlas='neuromorphometrics';
     outfolder_subj=fullfile(outfolder,subj);
     cd(outfolder);
     mkdir(subj);
@@ -112,14 +117,9 @@ for s=1:length(subjects)
     % Convert mgz to nii
     %[T1]=LTNP_mgz2nii(T1_mgz,outfolder_subj);
     %[atlas]=LTNP_mgz2nii(atlas_mgz,outfolder_subj);
-    
-    % Calculate voxelsize
-    voxelsize=LTNP_get_voxelsize_and_dimension(T1);
-    %voxelsize=1;
 
     % Make rr ready
-    [~,invdef]=LTNP_calc_deformation_field(T1,outfolder_subj);
-    %invdef=fullfile(deffolder,['iy_accT1_' subj '.nii']);
+    [~,invdef]=LTNP_cat12_calc_deformation_field(T1,outfolder_subj);
     [refVOI_warped]=LTNP_cat12_warp_ROI(refVOI,invdef,outfolder_subj,voxelsize);
 
     % Run psypet4
