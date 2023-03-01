@@ -63,7 +63,7 @@ def reshape4d(array):
 
 # Define function to calculate RBV-PVC
 
-def rb_pvc(subject,pet_dir,seg_dir,output_pvc):
+def rb_pvc(subject,pet_dir,seg_dir,output_pvc,fwhm):
             
     print('Script started.')
         
@@ -110,7 +110,7 @@ def rb_pvc(subject,pet_dir,seg_dir,output_pvc):
     #    '-nii',help='Output RSF ROI averages as a ROIx1x1xTime Nifti file. Default is text file',action='store_const',const=1
     #    '-weight',help='Input previously calculated w weight matrix'
         
-    fwhm = [6.5]
+    #fwhm = [6.5]
     mask = None          # mask for RBV image
     noZero = 1           # 1 dus we nemen nul in de voi's niet mee
     nii = None

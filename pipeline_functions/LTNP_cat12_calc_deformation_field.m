@@ -37,8 +37,8 @@ out_image=fullfile(outfolder,[T1_name T1_ext]);
 if strcmp(T1_path,out_image)==0
     copyfile(T1_path,outfolder) 
 end
-def=fullfile(outfolder,['y_' T1_name '.nii']);
-invdef=fullfile(outfolder,['iy_' T1_name '.nii']);
+def=fullfile(outfolder,'mri',['y_' T1_name '.nii']);
+invdef=fullfile(outfolder,'mri',['iy_' T1_name '.nii']);
 
 % Voxelsize
 if nargin<3
