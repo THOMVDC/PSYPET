@@ -145,7 +145,6 @@ else
 end
 
 %% 4/ Apply PVC on coregistred processed PET
-%[pvcSUV]=LTNP_PVC_RBV('SUV',script_dir,rSUV,segmentation,outfolder);
 if isequal(pvc,'RBV')
     
     % Talk to logfile
@@ -173,7 +172,8 @@ elseif isequal(pvc,'RB')
     fprintf(fid,'RB PVC started: %s at %i h %i min %i s\n',date,tmp(4), tmp(5),round(tmp(6)));
     
     % Apply RB
-    [pvcSUV]=LTNP_PVC_RB('SUV',python_dir,rSUV,segmentation,outfolder);
+    fwhm=6.5;
+    [pvcSUV]=LTNP_PVC_RB('SUV',python_dir,rSUV,segmentation,outfolder,fwhm);
     
 elseif isequal(pvc,'MG_orig')
     

@@ -1,4 +1,4 @@
-function [rbv_path]=LTNP_PVC_RB(subject,rbv_script_dir,pet_path,seg_path,output_folder)
+function [rbv_path]=LTNP_PVC_RB(subject,rbv_script_dir,pet_path,seg_path,output_folder,fwhm)
 
 % Pet_path and seg_path should be coregistred 
 
@@ -25,12 +25,12 @@ addpath(rbv_script_dir)
 %output_folder_tmp=fullfile(output_folder,'tmp/');
 %cd(output_folder);
 %mkdir('tmp');
-if ~endsWith(output_folder,'/')
-    output_folder=[output_folder '/'];
-end
+% if ~endsWith(output_folder,'/')
+%     output_folder=[output_folder '/'];
+% end
 
 % Run script
-rbv_path=py.PVC_RB_calculation_Nathalie.rb_pvc(subject,pet_path,seg_path,output_folder);
+rbv_path=py.PVC_RB_calculation_Nathalie.rb_pvc(subject,pet_path,seg_path,output_folder,fwhm);
 
 % Convert python string to matlab string
 rbv_path=char(rbv_path); 
