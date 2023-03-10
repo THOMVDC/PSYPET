@@ -215,8 +215,8 @@ def rbv_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
     
     #Save weight matricies
     if weight is None:
-        np.savetxt(os.path.join(output_pvc, output_prefix + '_wMatrix.txt',wMatrix))
-    np.savetxt(os.path.join(output_pvc, output_prefix + '_tMatrix.txt',tMatrix))
+        np.savetxt(os.path.join(output_pvc, output_prefix + '_wMatrix.txt'),wMatrix)
+    np.savetxt(os.path.join(output_pvc, output_prefix + '_tMatrix.txt'),tMatrix)
     
     #Reshape pet data back
     petData = petData.reshape((seg.shape[0],seg.shape[1],seg.shape[2],nPet))
@@ -263,7 +263,7 @@ def rbv_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
         avg = nib.Nifti1Image(roiCoef.reshape((nRoi,1,1,nPet)),np.identity(4))
         avg.to_filename(os.path.join(output_pvc, output_prefix + '_rsfAvg.nii'))
     else:
-        np.savetxt(os.path.join(output_pvc,output_prefix + '_rsfAvg.txt',roiCoef))
+        np.savetxt(os.path.join(output_pvc,output_prefix + '_rsfAvg.txt'),roiCoef)
     
     # Save RBV image
     rbv_dir = os.path.join(output_pvc,output_prefix + '_PET_PVC_RBV_' + str(fwhm).replace('.','_') + '_in_seg.nii')

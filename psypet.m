@@ -128,7 +128,13 @@ end
 [vs2,dim2]=LTNP_get_voxelsize_and_dimension(SUV_path);
 
 % Check if both images have same voxelsize and dimension
-if ~isequal(vs1,vs2) || ~isequal (dim1,dim2)
+if isequal(vs1,vs2) && isequal(dim1,dim2)
+    
+    % Talk to logfile
+    fprintf(fid,'PET already coregistred to T1 \n');
+    rSUV=SUV_path;
+    
+else 
     
     % Talk to logfile
     tmp=clock;
@@ -136,12 +142,7 @@ if ~isequal(vs1,vs2) || ~isequal (dim1,dim2)
     
     % Coregister
     [rSUV,~]=LTNP_spm12_coregister_reslice(T1_path,SUV_path,outfolder);
-    
-else
-    
-    % Talk to logfile
-    fprintf(fid,'PET already coregistred to T1 \n');
-    rSUV=SUV_path;
+ 
 end
 
 %% 4/ Apply PVC on coregistred processed PET
