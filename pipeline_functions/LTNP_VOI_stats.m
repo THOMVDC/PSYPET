@@ -56,7 +56,7 @@ end
 
 % Check if input images have same voxelsizes and dimensions
 if ~isequal(vs1,vs2) || ~isequal(dim1,dim2) || ~isequal(vs1,vs3) || ~isequal(dim1,dim3)
-    error('Input images do not have same voxelsize and dimension')
+    error('Input images do not have same voxelsizes and dimensions')
 end
 
 % Extract VOI numbers from atlas
