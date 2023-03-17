@@ -271,7 +271,7 @@ def rb_pvc(pet_dir,seg_dir,output_pvc,fwhm):
         np.savetxt(os.path.join(output_pvc,output_prefix + '_rsfAvg.txt'),roiCoef)
     
     # Save RBV image
-    rbv_dir = os.path.join(output_pvc,output_prefix + '_' + str(fwhm).replace('.','_') + 'mm' + os.path.basename(pet_dir))
+    rbv_dir = os.path.join(output_pvc,output_prefix + '_' + str(fwhm).replace('.','_') + 'mm_' + os.path.basename(pet_dir))
     #rbv = nib.Nifti1Image(rbvData,petAffine)
     rbv = nib.Nifti1Image(rsfData,petAffine)
     rbv.to_filename(rbv_dir)
