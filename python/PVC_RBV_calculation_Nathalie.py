@@ -76,7 +76,7 @@ def reshape4d(array):
 
 # Define function to calculate RBV-PVC
 
-def rbv_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
+def rbv_pvc(pet_dir,seg_dir,output_pvc,fwhm):
             
     print('Script started.')
         
@@ -89,7 +89,8 @@ def rbv_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
     #str_5 = output_pvc[indx+1]
     #str_6 = output_pvc[indx+2]
     #subject = str_1+str_2+str_3+str_4+str_5+str_6
-        
+    output_prefix='PVC_RBV'
+
     # Load data
         # PET data
     pet = load_data(pet_dir)[0]
@@ -272,7 +273,7 @@ def rbv_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
         np.savetxt(os.path.join(output_pvc,output_prefix + '_rsfAvg.txt'),roiCoef)
     
     # Save RBV image
-    rbv_dir = os.path.join(output_pvc,output_prefix + '_PET_PVC_RBV_' + str(fwhm).replace('.','_') + '_in_seg.nii')
+    rbv_dir = os.path.join(output_pvc,output_prefix + '_' + str(fwhm).replace('.','_') + 'mm' + os.path.basename(pet_dir))
     rbv = nib.Nifti1Image(rbvData,petAffine)
     rbv.to_filename(rbv_dir)
     print('RBV PVC PET calculation done.')

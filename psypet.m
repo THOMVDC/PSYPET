@@ -154,7 +154,7 @@ if isequal(pvc,'RBV')
     
     % Apply RBV
     fwhm=6.5;
-    [pvcSUV]=LTNP_PVC_RBV('rrrSUV',python_dir,rSUV,segmentation,outfolder,fwhm);
+    [pvcSUV]=LTNP_PVC_RBV(python_dir,rSUV,segmentation,outfolder,fwhm);
     
 elseif isequal(pvc,'RBV_5mm')
     
@@ -164,7 +164,7 @@ elseif isequal(pvc,'RBV_5mm')
     
     % Apply RBV
     fwhm=5;
-    [pvcSUV]=LTNP_PVC_RBV('rrrSUV',python_dir,rSUV,segmentation,outfolder,fwhm);
+    [pvcSUV]=LTNP_PVC_RBV(python_dir,rSUV,segmentation,outfolder,fwhm);
     
 elseif isequal(pvc,'RB')
     

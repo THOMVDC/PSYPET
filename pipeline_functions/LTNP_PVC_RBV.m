@@ -1,4 +1,4 @@
-function [rbv_path]=LTNP_PVC_RBV(subject,rbv_script_dir,pet_path,seg_path,output_folder,fwhm)
+function [rbv_path]=LTNP_PVC_RBV(rbv_script_dir,pet_path,seg_path,output_folder,fwhm)
 
 % Pet_path and seg_path should be coregistred 
 
@@ -26,7 +26,7 @@ addpath(rbv_script_dir)
 % end
 
 % Run script
-rbv_path=py.PVC_RBV_calculation_Nathalie.rbv_pvc(subject,pet_path,seg_path,output_folder,fwhm);
+rbv_path=py.PVC_RBV_calculation_Nathalie.rbv_pvc(pet_path,seg_path,output_folder,fwhm);
 
 % Convert python string to matlab string
 rbv_path=char(rbv_path); 
