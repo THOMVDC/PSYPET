@@ -244,8 +244,11 @@ def rbv_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
             rsfData[segData==roiList[roiIdx]] = roiCoef[roiIdx,petIdx]
 
         #Make and calculate rbv image
-        rsfSmooth =  filt.gaussian_filter(rsfData,sigmas) * maskData            
-        rbvData[:,:,:,petIdx] = np.ma.divide(petData[:,:,:,petIdx] * rsfData,np.ma.array(rsfSmooth,mask=rsfSmooth==0))
+        rsfSmooth =  filt.gaussian_filter(rsfData,sigmas) * maskData
+        if nPet==1:
+            rbvData[:,:,:] = np.ma.divide(petData[:,:,:] * rsfData,np.ma.array(rsfSmooth,mask=rsfSmooth==0))
+        else:            
+            rbvData[:,:,:,petIdx] = np.ma.divide(petData[:,:,:,petIdx] * rsfData,np.ma.array(rsfSmooth,mask=rsfSmooth==0))
     
     # (1) GTM-analysis
     #GTM-analyse = op regionaal vlak
