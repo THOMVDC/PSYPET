@@ -57,7 +57,7 @@ from datetime import datetime
 # Function to load image data (.nii, .nii.gz)
 def load_data(fname):
     nii = nib.load(fname)
-    nii = nib.as_closest_canonical(nii)
+#    nii = nib.as_closest_canonical(nii) #rearrange the image voxel axes to make them as close as possible to RAS+ orientation
     vol = np.nan_to_num(nii.get_fdata().squeeze())
     return nii,vol,nii.affine
 
@@ -219,7 +219,10 @@ def rbv_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
     np.savetxt(os.path.join(output_pvc, output_prefix + '_tMatrix.txt'),tMatrix)
     
     #Reshape pet data back
-    petData = petData.reshape((seg.shape[0],seg.shape[1],seg.shape[2],nPet))
+    if nPet==1:
+        petData = petData.reshape((seg.shape[0],seg.shape[1],seg.shape[2]))
+    else:
+        petData = petData.reshape((seg.shape[0],seg.shape[1],seg.shape[2],nPet))
     
     #Loop through pet images
     roiCoef = np.zeros((nRoi,nPet),dtype=np.float64)
@@ -274,4 +277,3 @@ def rbv_pvc(output_prefix,pet_dir,seg_dir,output_pvc,fwhm):
     return(rbv_dir)        
     return(print('Script has finished'))
     return(rbv_dir)
-    

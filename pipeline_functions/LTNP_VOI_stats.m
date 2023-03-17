@@ -36,18 +36,18 @@ function [table_out,colormap,Vref]=LTNP_VOI_stats(img_path,atlas_path,VOIdetails
 % Read img, get also voxelsize and dimension
 [IMG,Vref]= LCN12_read_image(img_path); 
 [~,img_name,~]=fileparts(img_path);
-[vs1,dim1]=LTNP_get_voxelsize_and_dimension(img_path);
+%[vs1,dim1]=LTNP_get_voxelsize_and_dimension(img_path);
 
 % Read atlas, get voxelsize and dimension
 [ATLASimg,Vref] = LCN12_read_image(atlas_path,Vref);
 ATLASimg = round(ATLASimg);
-[vs2,dim2]=LTNP_get_voxelsize_and_dimension(atlas_path);
+%[vs2,dim2]=LTNP_get_voxelsize_and_dimension(atlas_path);
 
 % Read mask
 if nargin<4
     MASKimg=1;
     msk_name='';
-    [vs3,dim3]=LTNP_get_voxelsize_and_dimension(img_path);
+%    [vs3,dim3]=LTNP_get_voxelsize_and_dimension(img_path);
 else
     MASKimg=LCN12_read_image(mask_path,Vref); 
     [~,msk_name,~]=fileparts(mask_path);
@@ -55,9 +55,9 @@ else
 end
 
 % Check if input images have same voxelsizes and dimensions
-if ~isequal(vs1,vs2) || ~isequal(dim1,dim2) || ~isequal(vs1,vs3) || ~isequal(dim1,dim3)
-    error('Input images do not have same voxelsizes and dimensions')
-end
+% if ~isequal(vs1,vs2) || ~isequal(dim1,dim2) || ~isequal(vs1,vs3) || ~isequal(dim1,dim3)
+%     error('Input images do not have same voxelsizes and dimensions')
+% end
 
 % Extract VOI numbers from atlas
 atlas_values = unique(ATLASimg(ATLASimg>0));
