@@ -37,6 +37,7 @@ if endsWith(PET,'.nii')
     % Talk to logfile
     fprintf(fid,'assuming PET has already been converted to nifti, aligned, averaged and centered \n');
     SUV_path=PET;
+    
 else
     % Talk to logfile
     tmp=clock;
