@@ -216,8 +216,13 @@ if RR_ready
     if ischar(rr)
         refVOI=rr;
     elseif isnumeric(rr)
-        refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
-        LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+        if length(num2str(rr))<200
+            refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
+            LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+        else
+            refVOI=fullfile(outfolder,'refVOI_mask_compVOI.nii');
+            LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+        end
     end
     
 else
@@ -230,15 +235,25 @@ else
             [~,invdef]=LTNP_cat12_calc_deformation_field(T1_path,outfolder);
             [refVOI]=LTNP_cat12_warp_ROI(rr,invdef,outfolder);
         elseif isnumeric(rr)
-            refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
-            LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+            if length(num2str(rr))<200
+                refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
+                LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+            else
+                refVOI=fullfile(outfolder,'refVOI_mask_compVOI.nii');
+                LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+            end
         end
     elseif CAT12
         if ischar(rr)
             [refVOI]=LTNP_cat12_warp_ROI(rr,invdef,outfolder);
         elseif isnumeric(rr)
-            refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
-            LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+            if length(num2str(rr))<200
+                refVOI=fullfile(outfolder,['refVOI_mask_' replace(num2str(rr),'  ','-') '.nii']);
+                LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+            else
+                refVOI=fullfile(outfolder,'refVOI_mask_compVOI.nii');
+                LTNP_binarize_atlas(segmentation,refVOI,rr,rr);
+            end
         end
     end 
 end

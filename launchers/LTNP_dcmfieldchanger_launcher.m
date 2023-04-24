@@ -10,7 +10,7 @@
 % Define dicom folder, dicom field and the new field value
 dcmfolder='/Volumes/LaCie/Thomas/Projects/RETINAL_IMAGING/DATA/RAW/AMYLOID/MCI009';
 field_path='PatientWeight';
-field_value=88; % has to be a number
+field_value=88;
 
 % field_path='RadiopharmaceuticalInformationSequence.Item_1.RadionuclideTotalDose';
 % field_value=131090000; % has to be a number
