@@ -84,13 +84,14 @@ elseif isfield(info,'Private_0009_1039')
     end
 elseif isfield(info,'Private_0009_103b')
     injtime= info.Private_0009_103b;
-    if length(injtime)==17
-        injtime=[injtime(9:end) '0'];
+    2020 01 20 09 37 00.000
+    if length(injtime)==6
+        injtime=[injtime '.000'];
     end
 elseif isfield(info,'Private_0009_103d')
     injtime= info.Private_0009_103d;
-    if length(injtime)==17
-        injtime=[injtime(9:end) '.00'];
+    if length(injtime)==6
+        injtime=[injtime '.000'];
     end
 else
     error('no RadiopharmaceuticalStartTime specified in dcm')
