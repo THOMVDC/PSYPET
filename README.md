@@ -34,6 +34,8 @@
 	Make sure you have a correct working installation of CAT12.6
 	General information: https://neuro-jena.github.io/cat/
 	Download site: https://www.neuro.uni-jena.de/cat12/ -> choose cat12_r1432
+    If you want to use partial volume correction (PVC), you'll need a correction installation of Python 3.8. The python folder should be added to the matlab search path. Required python packages will be downloaded and installed automatically when applying PVC.
+      
 
 ### Installing
 

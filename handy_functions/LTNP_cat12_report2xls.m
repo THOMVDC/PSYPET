@@ -24,12 +24,14 @@ end
 writetable(struct2table(T_subjects), out_excel)
 
 % CAT12.6
-T_subjects=dir(fullfile(maindir_T1,'B*')); %cat_accT1_*.mat'));
+maindir_T1='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/PSYPET4/T1/output/cat12_output/report';
+out_excel='/Volumes/LaCie/Thomas/Projects/MK_paper/MR_info.xlsx';
+T_subjects=dir(fullfile(maindir_T1,'cat_accT1_*.mat')); %'B*'));
 for s=1:length(T_subjects)
-    subj=T_subjects(s).name;
-    infile=fullfile(maindir_T1,subj,'T1preproc','report',['cat_accT1_' subj '.mat']);
-    %infile=fullfile(infile.folder,infile.name);
-    %infile=fullfile(T_subjects(s).folder,T_subjects(s).name);
+    %subj=T_subjects(s).name;
+    %infile=fullfile(maindir_T1,subj,'T1preproc','report',['cat_accT1_' subj '.mat']);
+    %infile=fullfile(infile(s).folder,infile(s).name);
+    infile=fullfile(T_subjects(s).folder,T_subjects(s).name);
     CAT12_vol_thick=load(infile);
     %str=CAT12_vol_thick.S.catlog{end-4, 1};
     %T_subjects(s).name=T_subjects(s).name(11:14);
@@ -37,7 +39,7 @@ for s=1:length(T_subjects)
     T_subjects(s).TIV=CAT12_vol_thick.S.subjectmeasures.vol_TIV;
     %T_subjects(s).thickness=cell2mat(CAT12_vol_thick.S.subjectmeasures.dist_thickness);
     %T_subjects(s).thickness=T_subjects(s).thickness(1); % grab only mean, not confidence interval
-    %T_subjects(s).IQR=extractBetween(str,'(IQR):  ','%');
+    T_subjects(s).IQR=CAT12_vol_thick.S.qualityratings.IQR;
     T_subjects(s).CSF=CAT12_vol_thick.S.subjectmeasures.vol_abs_CGW(1);
     T_subjects(s).GM=CAT12_vol_thick.S.subjectmeasures.vol_abs_CGW(2);
     T_subjects(s).WM=CAT12_vol_thick.S.subjectmeasures.vol_abs_CGW(3);
