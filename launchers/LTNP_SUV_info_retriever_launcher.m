@@ -11,7 +11,7 @@
 % Define subject, input directory and the output path for excel
 subj='B002';
 inputdir='/Volumes/LaCie/Thomas/Projects/AGEING/UCB_MK_FLUT/RAW/MK62_4s';
-output_excel_path = '/Users/tvdcas1/Desktop/SUV_info.xlsx';
+output_excel_path = '/Volumes/LaCie/Thomas/Projects/MK_paper/clinical data/SUV_info_update.xlsx';
 
 %% Launch for single subject
 
@@ -41,7 +41,7 @@ writecell(T,output_excel_path);
 %% Launch for multiple subjects
 
 % List all subjects
-l = dir(subjdir);
+l = dir(inputdir);
 nr_subj=length(l);
 
 % Define table 

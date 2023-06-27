@@ -35,7 +35,6 @@ packages=['os','numpy','nibabel','scipy','sys','pandas','datetime']
 for pck in packages:
     import_or_install(pck)
 
-# Load packages
 import os
 import numpy as np
 import nibabel as nib
@@ -177,7 +176,7 @@ def rb_pvc(pet_dir,seg_dir,output_pvc,fwhm):
     
     #Determine smoothing values for each dimension.
     voxSize = pet.header.get_zooms()
-    sigmas = np.divide(fwhm[0]/np.sqrt(8.0*np.log(2.0)),voxSize[0:3])
+    sigmas = np.divide([fwhm]/np.sqrt(8.0*np.log(2.0)),voxSize[0:3])
     
     # Matrix w is de GTM matrix, berekend via:
         # = spill-over van ene voi naar andere voi

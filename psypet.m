@@ -175,7 +175,7 @@ elseif isequal(pvc,'RB')
     
     % Apply RB
     fwhm=6.5;
-    [pvcSUV]=LTNP_PVC_RB('SUV',python_dir,rSUV,segmentation,outfolder,fwhm);
+    [pvcSUV]=LTNP_PVC_RB(python_dir,rSUV,segmentation,outfolder,fwhm);
     
 elseif isequal(pvc,'MG_orig')
     
