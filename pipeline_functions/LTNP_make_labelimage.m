@@ -22,8 +22,8 @@ CSF = LCN12_read_image(CSF_path,Vref);
 GMmask=GM>0.3;
 CSFmask=CSF>0.5;
 WMmask=WM>0;
-CSFmask=CSFmask-(CSFmask.*GMmask); % Csf that doesn't overlap with GM
-WMmask=WMmask-GMmask-CSFmask;
+CSFmask=(CSFmask-(CSFmask.*GMmask))>0; % Csf that doesn't overlap with GM
+WMmask=(WMmask-GMmask-CSFmask)>0;
 
 % Create brainmask
 BRAINmask=1*(GMmask+WMmask+CSFmask);

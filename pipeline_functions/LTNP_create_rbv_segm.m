@@ -53,7 +53,7 @@ SEGMENTATION_AND_SKULL= ATLAS_GM + ATLAS_WM + ATLAS_CSF + ATLAS_MENSKULL;
 output_segm_path=fullfile(output_folder,['rbv_segm_' atlas_name '.nii']);
 output_segm_and_skull_path=fullfile(output_folder,['rbv_segm_skull_' atlas_name '.nii']);
 MENGSKULL_path=fullfile(output_folder,['mengskull_' atlas_name '.nii']);
-GMWMCSFmask_path=fullfile(output_folder,['GMWMCSFmask_' atlas_name '.nii']);
+GMWMCSFmask_path=fullfile(output_folder,['GMWMCSF_mask_' atlas_name '.nii']);
 
 % Save
 Vref.fname=output_segm_path;
